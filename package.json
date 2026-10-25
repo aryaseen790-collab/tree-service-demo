@@ -5,15 +5,17 @@
   "private": true,
   "description": "Multi-page local tree service website (Astro + Tailwind). All business details live in src/data/business.json.",
   "engines": {
-    "node": ">=18.20.8"
+    "node": ">=20.3.0"
   },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "astro dev --force",
+    "build": "astro build --force",
     "preview": "astro preview",
     "images": "node scripts/fetch-images.mjs",
     "images:placeholders": "node scripts/make-placeholders.mjs",
-    "check:links": "node scripts/check-links.mjs"
+    "check:links": "node scripts/check-links.mjs",
+    "audit": "node scripts/audit.mjs",
+    "test": "npm run build && node scripts/audit.mjs && node scripts/check-links.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

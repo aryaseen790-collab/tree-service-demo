@@ -32,7 +32,7 @@ for (const f of files.sort()) {
   if (h1s !== 1) issues.push(`h1 x${h1s}`);
   if (titles.has(title)) issues.push(`duplicate title with ${titles.get(title)}`);
   titles.set(title, rel);
-  if (!/<link rel="canonical"/.test(html)) issues.push('no canonical');
+  if (!/<link rel="canonical"/.test(html) && !/404|thank-you/.test(rel)) issues.push('no canonical');
   problems += issues.length;
   rows.push(`${rel.padEnd(45)} t${String(title.length).padStart(3)} d${String(desc.length).padStart(4)} words ${String(words).padStart(4)} ${issues.join(', ')}`);
 }

@@ -2,6 +2,15 @@ import { fillTokens, tokens } from './tokens.mjs';
 
 const escape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+// Phone numbers in copy become tap-to-call links that never wrap mid-number.
+function linkPhones(node, inLink) {
+  if (inLink || node.type !== 'text' || !node.value.includes(tokens.phone)) return [node];
+  return node.value.split(tokens.phone).flatMap((part, i) => [
+    ...(i ? [{ type: 'html', value: `<a href="${tokens.phoneHref}" class="whitespace-nowrap">${escape(tokens.phone)}</a>` }] : []),
+    ...(part ? [{ type: 'text', value: part }] : []),
+  ]);
+}
+
 // Wrap "[CONFIRM ...]" placeholders in a highlighted span (see .confirm in global.css).
 function highlightPlaceholders(node) {
   if (node.type !== 'text' || !/\[CONFIRM/i.test(node.value)) return [node];
@@ -22,7 +31,7 @@ export function remarkBusinessTokens({ base = '/' } = {}) {
 <p>Free estimates and same-day response from a local ${tokens.city} crew.</p>
 <div class="cta-inline-actions"><a class="btn-accent" href="${tokens.phoneHref}">Call ${tokens.phone}</a><a class="btn-outline" href="${prefix}/contact/#quote">Get a Free Quote</a></div>
 </aside>`;
-  const walk = (node) => {
+  const walk = (node, inLink = false) => {
     if (node.type === 'text' || node.type === 'inlineCode') node.value = fillTokens(node.value);
     if (node.type === 'html') node.value = node.value.trim() === '<!-- CTA -->' ? cta : fillTokens(node.value);
     if (node.type === 'link' && typeof node.url === 'string') {
@@ -30,8 +39,9 @@ export function remarkBusinessTokens({ base = '/' } = {}) {
       if (node.url.startsWith('/') && !node.url.startsWith('//') && prefix) node.url = prefix + node.url;
     }
     if (node.children) {
-      node.children.forEach(walk);
-      node.children = node.children.flatMap(highlightPlaceholders);
+      const isLink = inLink || node.type === 'link';
+      node.children.forEach((c) => walk(c, isLink));
+      node.children = node.children.flatMap((c) => linkPhones(c, isLink)).flatMap(highlightPlaceholders);
     }
   };
   return (tree) => walk(tree);
