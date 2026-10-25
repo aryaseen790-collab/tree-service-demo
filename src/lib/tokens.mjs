@@ -2,6 +2,8 @@
 // instead of hard-coding business details. Values come from business.json.
 import business from '../data/business.json' with { type: 'json' };
 
+const slugify = (s) => s.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 export const tokens = {
   name: business.name,
   city: business.address.city,
@@ -14,6 +16,7 @@ export const tokens = {
   ratingValue: business.rating.value.toFixed(1),
   ratingCount: String(business.rating.count),
   responseTime: business.responseTime,
+  costGuidePath: `/tree-removal-cost-${slugify(business.address.city)}-${business.address.state.toLowerCase()}/`,
 };
 
 export function fillTokens(str) {

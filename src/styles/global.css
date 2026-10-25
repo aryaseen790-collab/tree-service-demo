@@ -96,6 +96,14 @@
   .prose-site strong { @apply font-semibold text-forest-950; }
   .prose-site blockquote { @apply border-l-4 border-accent-500 bg-cream-200 px-5 py-3 not-italic; }
 
+  .prose-site .cta-inline { @apply my-10 rounded-2xl bg-forest-50 p-6 ring-1 ring-forest-600/25; }
+  .prose-site .cta-inline > * + * { margin-top: 0.5rem; }
+  .prose-site .cta-inline-title { @apply font-heading text-xl font-extrabold text-forest-950; }
+  .prose-site .cta-inline-actions { @apply mt-4 flex flex-col gap-3 sm:flex-row; }
+  .prose-site .cta-inline a { text-decoration: none; }
+  .prose-site .cta-inline a.btn-accent { @apply text-forest-950; }
+  .prose-site .cta-inline a.btn-outline { @apply text-forest-900; }
+
   /* "[CONFIRM ...]" placeholders get a visible highlight so nothing slips through. */
   .confirm {
     @apply rounded bg-amber-100 px-1 font-semibold text-amber-900 ring-1 ring-amber-300 ring-inset;

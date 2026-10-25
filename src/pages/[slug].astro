@@ -1,0 +1,151 @@
+---
+// One route for every root-level content page: service pages (/tree-removal/),
+// city pages (/tree-service-belton-tx/) and the cost guide.
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Faq from '../components/Faq.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import AreaList from '../components/AreaList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import Img from '../components/Img.astro';
+import Field from '../components/Field.astro';
+import { biz, fillTokens, services, serviceBySlug, areaSlug, costGuideSlug, telHref, url, cityState } from '../lib/site';
+import { serviceSchema, faqSchema } from '../lib/schema';
+
+export async function getStaticPaths() {
+  const svc = await getCollection('services');
+  const areas = await getCollection('areas');
+  const guides = await getCollection('guides');
+  const known = new Set(biz.services.map((s) => s.slug));
+  for (const s of svc) if (!known.has(s.data.service)) throw new Error(`services/${s.id}.md: "${s.data.service}" is not in business.json services`);
+  for (const a of areas) if (!biz.serviceArea.includes(a.data.city)) throw new Error(`areas/${a.id}.md: "${a.data.city}" is not in business.json serviceArea`);
+  return [
+    ...svc.map((entry) => ({ params: { slug: entry.data.service }, props: { kind: 'service' as const, entry } })),
+    ...areas.map((entry) => ({ params: { slug: areaSlug(entry.data.city) }, props: { kind: 'area' as const, entry } })),
+    ...guides.filter((g) => g.id === 'cost-guide').map((entry) => ({ params: { slug: costGuideSlug }, props: { kind: 'guide' as const, entry } })),
+  ];
+}
+
+const { kind, entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data as Record<string, any>;
+const path = `/${Astro.params.slug}/`;
+const title = fillTokens(d.title);
+const description = fillTokens(d.description);
+const h1 = fillTokens(d.h1);
+const intro = fillTokens(d.intro);
+const faqs = ((d.faqs ?? []) as { q: string; a: string }[]).map((f) => ({ q: fillTokens(f.q), a: fillTokens(f.a) }));
+
+const service = kind === 'service' ? serviceBySlug(d.service)! : undefined;
+const emergency = kind === 'service' && d.emergency;
+const related = kind === 'service' ? (d.related as string[]).map((s) => serviceBySlug(s)!).filter(Boolean) : [];
+
+const crumbs =
+  kind === 'service'
+    ? [{ name: 'Home', href: '/' }, { name: service!.name, href: path }]
+    : kind === 'area'
+      ? [{ name: 'Home', href: '/' }, { name: 'Service Areas', href: '/service-areas/' }, { name: d.city, href: path }]
+      : [{ name: 'Home', href: '/' }, { name: 'Tree Removal Cost Guide', href: path }];
+
+const schema: Record<string, unknown>[] = [];
+if (service) schema.push(serviceSchema(Astro.site, service.name, description, path));
+if (faqs.length) schema.push(faqSchema(faqs));
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={schema}>
+  {emergency ? (
+    <section class="bg-storm-900 text-white">
+      <div class="bg-alert-600 py-2 text-center text-sm font-bold uppercase tracking-wider">Storm damage · Fallen trees · Urgent help</div>
+      <div class="container-x py-10 sm:py-14">
+        <nav aria-label="Breadcrumb" class="text-sm text-cream-200"><a href={url('/')} class="text-white underline underline-offset-4">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">{service!.name}</span></nav>
+        <h1 class="mt-4 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">{h1}</h1>
+        <p class="mt-4 max-w-2xl text-lg text-cream-200 sm:text-xl">{intro}</p>
+        <a href={telHref} class="btn-accent mt-8 w-full max-w-xl py-5 text-2xl sm:text-3xl"><Icon name="phone" class="h-7 w-7" /> Call {biz.phone.display}</a>
+        <p class="mt-3 text-cream-200">Tap to call. Emergency availability: <Field v={biz.emergencyAvailability} /></p>
+        <p class="mt-6 rounded-xl bg-white/10 p-4 font-semibold text-white ring-1 ring-white/20">
+          <span class="text-accent-300">Danger first:</span> if a tree is touching a power line, stay at least 35 feet away and call 911 or your electric company before you call us.
+        </p>
+      </div>
+    </section>
+  ) : (
+    <PageHeader h1={h1} intro={intro} crumbs={crumbs} image={d.image} />
+  )}
+
+  {emergency && d.checklist && (
+    <section class="border-b-4 border-accent-500 bg-cream-50 py-10" aria-labelledby="checklist-h">
+      <div class="container-x">
+        <h2 id="checklist-h" class="text-2xl font-extrabold sm:text-3xl">Storm damage checklist: what to do before we arrive</h2>
+        <ol class="mt-6 grid gap-4 md:grid-cols-2">
+          {(d.checklist as string[]).map((item, i) => (
+            <li class="flex gap-4 rounded-xl bg-white p-4 ring-1 ring-forest-900/10">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-500 font-heading font-extrabold text-forest-950">{i + 1}</span>
+              <span>{fillTokens(item)}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <div class="container-x grid gap-12 py-12 lg:grid-cols-[minmax(0,1fr)_380px] lg:py-16">
+    <article>
+      <div class="prose-site">
+        <Content />
+      </div>
+
+      {kind === 'area' && (
+        <section class="mt-12 grid gap-6 md:grid-cols-2" aria-label={`Trees in ${d.city}`}>
+          <div class="rounded-2xl bg-white p-6 ring-1 ring-forest-900/10">
+            <h2 class="text-xl font-extrabold">Trees we often work on in {d.city}</h2>
+            <ul class="mt-4 space-y-2">
+              {(d.trees as string[]).map((t) => <li class="flex gap-2"><Icon name="leaf" class="mt-1 h-5 w-5 shrink-0 text-forest-600" />{t}</li>)}
+            </ul>
+          </div>
+          <div class="overflow-hidden rounded-2xl">
+            <Img id={d.image} sizes="(min-width: 1024px) 360px, 100vw" class="h-full w-full object-cover" />
+          </div>
+        </section>
+      )}
+
+      {faqs.length > 0 && <Faq faqs={faqs} heading={kind === 'area' ? `Tree service questions from ${d.city}` : 'Frequently asked questions'} />}
+
+      {kind === 'service' && (
+        <section class="mt-14" aria-labelledby="related-h">
+          <h2 id="related-h" class="text-2xl font-extrabold sm:text-3xl">Related services</h2>
+          <ul class="mt-6 grid gap-6 sm:grid-cols-2">
+            {related.map((s) => <ServiceCard {...s} />)}
+          </ul>
+        </section>
+      )}
+
+      {kind !== 'service' && (
+        <section class="mt-14" aria-labelledby="svc-h">
+          <h2 id="svc-h" class="text-2xl font-extrabold sm:text-3xl">{kind === 'area' ? `Our services in ${d.city}` : 'Our services'}</h2>
+          <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+            {services.map((s) => (
+              <li><a href={url(`/${s.slug}/`)} class="flex items-center justify-between gap-2 rounded-xl bg-white px-4 py-3 font-semibold text-forest-950 no-underline ring-1 ring-forest-900/10 hover:ring-forest-600">{s.name}{kind === 'area' ? ` in ${d.city}` : ''}<Icon name="arrow" class="h-4 w-4 text-forest-600" /></a></li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section class="mt-14" aria-labelledby="areas-h">
+        <h2 id="areas-h" class="text-2xl font-extrabold sm:text-3xl">{kind === 'area' ? 'Nearby towns we serve' : `Serving ${cityState} and nearby`}</h2>
+        <div class="mt-6"><AreaList exclude={kind === 'area' ? d.city : undefined} /></div>
+      </section>
+    </article>
+
+    <aside id="quote" class="lg:sticky lg:top-28 lg:self-start">
+      <QuoteForm id="page-quote" service={service?.slug} heading={emergency ? 'Request urgent help' : 'Get a free quote'} sub={emergency ? 'For anything dangerous, call instead. It is faster.' : 'Four quick fields. We reply fast.'} />
+      <div class="mt-4 rounded-2xl bg-forest-900 p-5 text-white">
+        <p class="font-heading text-lg font-extrabold">Rather talk to a person?</p>
+        <a href={telHref} class="mt-2 inline-flex items-center gap-2 font-heading text-2xl font-extrabold text-accent-400 no-underline hover:text-accent-300"><Icon name="phone" />{biz.phone.display}</a>
+        <p class="mt-1 text-sm text-cream-200">Hours: <Field v={biz.hours.display} /></p>
+      </div>
+    </aside>
+  </div>
+
+  <CtaBand heading={emergency ? 'Tree down? Call now.' : undefined} />
+</BaseLayout>
