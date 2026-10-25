@@ -24,7 +24,7 @@ const srcset = slot.widths.map((w) => `${url(`/images/${id}-${w}.webp`)} ${w}w`)
   sizes={sizes}
   width={slot.width}
   height={slot.height}
-  alt={alt ?? slot.alt}
+  alt={alt ?? (slot.sourceUrl ? slot.alt : `Illustration: ${slot.alt}`)}
   loading={loading}
   decoding="async"
   fetchpriority={fetchpriority}

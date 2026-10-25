@@ -1,0 +1,13 @@
+# Netlify picks these up automatically. Cloudflare Pages: use the same
+# build command and output directory in the project settings.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"

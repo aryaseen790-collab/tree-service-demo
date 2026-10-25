@@ -7,9 +7,8 @@ import { remarkBusinessTokens } from './src/lib/remark-business-tokens.mjs';
 
 // SITE_URL / BASE_PATH are set by the GitHub Pages workflow. Netlify and
 // Cloudflare Pages serve from the domain root, so the defaults just work there.
-// Netlify exposes URL and Cloudflare Pages exposes CF_PAGES_URL automatically.
-const site =
-  process.env.SITE_URL || process.env.URL || process.env.CF_PAGES_URL || business.site.url;
+// Netlify sets URL to the site's main address; otherwise business.json site.url is used.
+const site = process.env.SITE_URL || process.env.URL || business.site.url;
 const base = process.env.BASE_PATH || '/';
 
 export default defineConfig({
