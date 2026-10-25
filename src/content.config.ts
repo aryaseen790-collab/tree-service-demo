@@ -8,8 +8,8 @@ const services = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/services' }),
   schema: z.object({
     service: z.string(), // must match a slug in business.json services
-    title: z.string().max(60),
-    description: z.string().max(155),
+    title: z.string(), // final length (after {{tokens}}) is checked by scripts/audit.mjs
+    description: z.string(),
     h1: z.string(),
     intro: z.string(),
     image: z.string(),
@@ -25,8 +25,8 @@ const areas = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/areas' }),
   schema: z.object({
     city: z.string(), // must match an entry in business.json serviceArea
-    title: z.string().max(60),
-    description: z.string().max(155),
+    title: z.string(), // final length (after {{tokens}}) is checked by scripts/audit.mjs
+    description: z.string(),
     h1: z.string(),
     intro: z.string(),
     image: z.string(),
@@ -39,8 +39,8 @@ const areas = defineCollection({
 const guides = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/guides' }),
   schema: z.object({
-    title: z.string().max(60),
-    description: z.string().max(155),
+    title: z.string(), // final length (after {{tokens}}) is checked by scripts/audit.mjs
+    description: z.string(),
     h1: z.string(),
     intro: z.string(),
     image: z.string(),

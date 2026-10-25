@@ -27,8 +27,8 @@ for (const f of files.sort()) {
   const article = html.match(/<article>([\s\S]*?)<\/article>/)?.[1];
   const words = article ? strip(article).split(/\s+/).filter((w) => /[a-z]/i.test(w)).length : 0;
   const issues = [];
-  if (!title || title.length > 60) issues.push(`title ${title.length}`);
-  if (!desc || desc.length > 155) issues.push(`desc ${desc.length}`);
+  if (!title || title.length >= 60) issues.push(`title ${title.length}`);
+  if (!desc || desc.length >= 155) issues.push(`desc ${desc.length}`);
   if (h1s !== 1) issues.push(`h1 x${h1s}`);
   if (titles.has(title)) issues.push(`duplicate title with ${titles.get(title)}`);
   titles.set(title, rel);

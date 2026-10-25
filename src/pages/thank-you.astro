@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import Field from '../components/Field.astro';
+import { biz, telHref, url } from '../lib/site';
+---
+<BaseLayout title={`Thank You | ${biz.name}`} description={`Thanks for contacting ${biz.name}. We got your request and will be in touch soon.`} noindex>
+  <section class="py-20">
+    <div class="container-x max-w-2xl text-center">
+      <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-forest-100 text-forest-700"><Icon name="check" class="h-9 w-9" /></span>
+      <h1 class="mt-6 text-4xl font-extrabold">Thanks! We got your request.</h1>
+      <p class="mt-4 text-lg">We'll reach out within <Field v={biz.responseTime} />. If it's urgent, call us now.</p>
+      <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+        <a href={telHref} class="btn-accent"><Icon name="phone" /> {biz.phone.display}</a>
+        <a href={url('/')} class="btn-outline">Back to home</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

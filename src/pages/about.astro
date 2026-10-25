@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Field from '../components/Field.astro';
+import { biz, cityState, url } from '../lib/site';
+
+const crumbs = [{ name: 'Home', href: '/' }, { name: 'About', href: '/about/' }];
+const values = [
+  { icon: 'shield', title: 'Safety first', text: 'For your family, your home and our crew. We plan every cut before we make it.' },
+  { icon: 'check', title: 'Straight answers', text: "If a tree can be saved, we'll tell you. If it can't, we'll explain why in plain words." },
+  { icon: 'leaf', title: 'Respect for trees', text: 'Good trees take decades to grow. We prune the right way and only remove what needs to go.' },
+  { icon: 'star', title: 'Clean finish', text: "We treat your yard like our own and don't call the job done until it's cleaned up." },
+] as const;
+const facts = [
+  { label: 'Years in business', v: biz.trust.yearsInBusiness },
+  { label: 'Licensed', v: biz.trust.licensed },
+  { label: 'Insured', v: biz.trust.insured },
+  { label: 'Certifications', v: biz.trust.certifications },
+  { label: 'Google rating', v: `${biz.rating.value.toFixed(1)} stars from ${biz.rating.count} reviews` },
+  { label: 'Based in', v: `${biz.address.street}, ${cityState}` },
+];
+---
+<BaseLayout
+  title={`About ${biz.name} | Tree Service in ${cityState}`}
+  description={`Meet ${biz.name}, a local tree service in ${cityState} rated ${biz.rating.value.toFixed(1)} on Google. Safe, careful tree work and straight answers.`}
+  crumbs={crumbs}
+>
+  <PageHeader h1={`About ${biz.name}`} intro={`A local ${biz.address.city} tree crew that shows up, does careful work and leaves your yard clean.`} crumbs={crumbs} image="hero" />
+
+  <section class="py-14 lg:py-20">
+    <div class="container-x grid items-start gap-12 lg:grid-cols-2">
+      <div class="prose-site">
+        <h2>Our story</h2>
+        <p><span class="confirm">[CONFIRM: owner story. 2–3 short paragraphs from the owner, {biz.ownerName}: how they got started in tree work, when the business began, and why they care about doing it right.]</span></p>
+        <p>
+          What we can say for sure: {biz.name} is based on {biz.address.street} in {biz.address.city}, and homeowners across {biz.county} have given us a
+          {' '}{biz.rating.value.toFixed(1)}-star rating from {biz.rating.count} Google reviews. We'd love to earn yours too.
+        </p>
+        <h2>What we do</h2>
+        <p>
+          We handle tree removal, trimming and pruning, stump grinding, storm and emergency work, land clearing and oak wilt care for homes, farms and businesses in
+          {' '}{biz.serviceArea.slice(0, -1).join(', ')} and {biz.serviceArea.at(-1)}.
+        </p>
+      </div>
+      <figure>
+        <Img id="about-team" sizes="(min-width: 1024px) 560px, 100vw" class="aspect-[3/2] w-full rounded-2xl object-cover shadow-lg" />
+        <figcaption class="mt-2 text-sm text-muted">Team photo placeholder. Replace with a real photo of the crew.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="bg-white py-14 lg:py-20">
+    <div class="container-x">
+      <h2 class="text-3xl font-extrabold sm:text-4xl">What we stand for</h2>
+      <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {values.map((v) => (
+          <li class="rounded-2xl bg-cream-100 p-6">
+            <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-forest-100 text-forest-700"><Icon name={v.icon} class="h-6 w-6" /></span>
+            <h3 class="mt-4 text-xl font-bold">{v.title}</h3>
+            <p class="mt-2 text-muted">{v.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="py-14 lg:py-20">
+    <div class="container-x">
+      <h2 class="text-3xl font-extrabold sm:text-4xl">At a glance</h2>
+      <dl class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {facts.map((f) => (
+          <div class="rounded-xl bg-white p-5 ring-1 ring-forest-900/10">
+            <dt class="text-sm font-bold uppercase tracking-wider text-forest-700">{f.label}</dt>
+            <dd class="mt-1 text-lg font-semibold text-forest-950"><Field v={f.v} /></dd>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-8"><a href={url('/reviews/')} class="link">Read our reviews</a> or <a href={url('/service-areas/')} class="link">see where we work</a>.</p>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

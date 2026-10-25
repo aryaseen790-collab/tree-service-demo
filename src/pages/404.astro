@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { biz, services, telHref, url } from '../lib/site';
+---
+<BaseLayout title={`Page Not Found | ${biz.name}`} description="Sorry, we couldn't find that page. Try one of our tree services below or call us." noindex>
+  <section class="py-16 lg:py-24">
+    <div class="container-x max-w-3xl">
+      <p class="eyebrow">Error 404</p>
+      <h1 class="mt-2 text-4xl font-extrabold sm:text-5xl">This page has been cut down.</h1>
+      <p class="mt-4 text-lg text-muted">The page you're looking for doesn't exist or has moved. Here's where you can go instead:</p>
+      <ul class="mt-8 grid gap-3 sm:grid-cols-2">
+        {services.map((s) => (
+          <li><a href={url(`/${s.slug}/`)} class="flex items-center justify-between rounded-xl bg-white px-4 py-3 font-semibold text-forest-950 no-underline ring-1 ring-forest-900/10 hover:ring-forest-600">{s.name}<Icon name="arrow" class="h-4 w-4 text-forest-600" /></a></li>
+        ))}
+      </ul>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href={url('/')} class="btn-primary">Go to home page</a>
+        <a href={telHref} class="btn-accent"><Icon name="phone" /> Call {biz.phone.display}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
