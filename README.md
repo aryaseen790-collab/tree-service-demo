@@ -137,6 +137,10 @@ check, and deploys on every push to `main` (or manually from the Actions tab).
 3. Push to `main` (or run the workflow manually). The site appears at
    `https://<user>.github.io/<repo>/`.
 
+`main` must be the repo's **default branch** (Settings → General → Default
+branch). GitHub only lets the default branch publish to Pages; otherwise the
+"deploy" job fails within a second without any log.
+
 If a deploy ran before Pages was turned on, it fails at the
 "configure-pages" step. Open that run in the **Actions** tab and click
 **Re-run all jobs**, or push any new commit to `main`.
