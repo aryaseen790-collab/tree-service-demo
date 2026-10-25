@@ -1,0 +1,164 @@
+---
+// Quote form. "short" shows 4 fields with optional extras behind a toggle;
+// "full" shows every field (contact page). Posts to Formspree; in DEMO_MODE the
+// endpoint is the site builder's, never the business's (see business.json).
+import { biz, services, formEndpoint, formIsPlaceholder, telHref, url, DEMO_MODE } from '../lib/site';
+import Field from './Field.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  id?: string;
+  variant?: 'short' | 'full';
+  service?: string;
+  heading?: string;
+  sub?: string;
+}
+const {
+  id = 'quote-form',
+  variant = 'short',
+  service,
+  heading = 'Get your free quote',
+  sub = 'Takes about a minute. We reply fast.',
+} = Astro.props;
+const upload = biz.form.allowPhotoUpload;
+const input =
+  'mt-1 block w-full rounded-lg border border-forest-900/25 bg-white px-3.5 py-3 text-base text-ink shadow-sm placeholder:text-muted/70 focus:border-forest-600 focus:outline-none focus:ring-2 focus:ring-forest-600/40';
+const label = 'block font-semibold text-forest-950';
+const thanksUrl = url('/thank-you/');
+---
+<div class="quote-form rounded-2xl bg-white p-5 shadow-lg ring-1 ring-forest-900/10 sm:p-7" data-placeholder={formIsPlaceholder ? 'true' : 'false'}>
+  <h2 class="text-2xl font-extrabold" id={`${id}-title`}>{heading}</h2>
+  <p class="mt-1 text-muted">{sub}</p>
+
+  <form
+    id={id}
+    action={formEndpoint}
+    method="POST"
+    enctype={upload ? 'multipart/form-data' : undefined}
+    class="mt-5 space-y-4"
+    aria-labelledby={`${id}-title`}
+  >
+    <input type="hidden" name="_subject" value={`${DEMO_MODE ? '[DEMO] ' : ''}New quote request: ${biz.name}`} />
+    <input type="hidden" name="_next" value={thanksUrl} data-absolute />
+    <input type="hidden" name="page" value={Astro.url.pathname} />
+    <div class="hidden" aria-hidden="true">
+      <label>Leave this empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label for={`${id}-name`} class={label}>Your name <span class="text-alert-600" aria-hidden="true">*</span></label>
+        <input id={`${id}-name`} name="name" type="text" autocomplete="name" required class={input} />
+      </div>
+      <div>
+        <label for={`${id}-phone`} class={label}>Phone <span class="text-alert-600" aria-hidden="true">*</span></label>
+        <input id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" inputmode="tel" required class={input} />
+      </div>
+      {variant === 'full' && (
+        <div class="sm:col-span-2">
+          <label for={`${id}-email`} class={label}>Email <span class="font-normal text-muted">(optional)</span></label>
+          <input id={`${id}-email`} name="email" type="email" autocomplete="email" class={input} />
+        </div>
+      )}
+      <div>
+        <label for={`${id}-address`} class={label}>Address or ZIP</label>
+        <input id={`${id}-address`} name="address" type="text" autocomplete="street-address" class={input} />
+      </div>
+      <div>
+        <label for={`${id}-service`} class={label}>Service needed</label>
+        <select id={`${id}-service`} name="service" class={input}>
+          {services.map((s) => <option value={s.name} selected={s.slug === service}>{s.name}</option>)}
+          <option value="Not sure / other" selected={!service}>Not sure / other</option>
+        </select>
+      </div>
+    </div>
+
+    {variant === 'full' ? (
+      <div class="space-y-4">
+        <div>
+          <label for={`${id}-message`} class={label}>Tell us about the job <span class="font-normal text-muted">(optional)</span></label>
+          <textarea id={`${id}-message`} name="message" rows="4" class={input} placeholder="How many trees, how big, anything near the house or power lines?"></textarea>
+        </div>
+        {upload && (
+          <div>
+            <label for={`${id}-photo`} class={label}>Photos <span class="font-normal text-muted">(optional)</span></label>
+            <input id={`${id}-photo`} name="photo" type="file" accept="image/*" class="mt-1 block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-forest-100 file:px-4 file:py-2.5 file:font-semibold file:text-forest-900 hover:file:bg-forest-200" />
+            <p class="mt-1 text-sm text-muted">A photo helps us give a faster, more accurate quote.</p>
+          </div>
+        )}
+      </div>
+    ) : (
+      <details class="group rounded-lg bg-cream-100 px-4 py-3">
+        <summary class="flex items-center justify-between font-semibold text-forest-800">
+          Add details or a photo (optional)
+          <Icon name="chevron" class="h-5 w-5 transition group-open:rotate-180" />
+        </summary>
+        <div class="mt-3 space-y-4">
+          <div>
+            <label for={`${id}-email`} class={label}>Email</label>
+            <input id={`${id}-email`} name="email" type="email" autocomplete="email" class={input} />
+          </div>
+          <div>
+            <label for={`${id}-message`} class={label}>Tell us about the job</label>
+            <textarea id={`${id}-message`} name="message" rows="3" class={input}></textarea>
+          </div>
+          {upload && (
+            <div>
+              <label for={`${id}-photo`} class={label}>Photo</label>
+              <input id={`${id}-photo`} name="photo" type="file" accept="image/*" class="mt-1 block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-forest-100 file:px-4 file:py-2.5 file:font-semibold file:text-forest-900" />
+            </div>
+          )}
+        </div>
+      </details>
+    )}
+
+    <button type="submit" class="btn-accent w-full text-lg">Get My Free Quote <Icon name="arrow" /></button>
+    <p class="form-error hidden rounded-lg bg-alert-50 px-4 py-3 text-sm font-semibold text-alert-600" role="alert"></p>
+    <p class="text-center text-sm text-muted">
+      Prefer to talk? <a href={telHref} class="link">Call {biz.phone.display}</a>
+    </p>
+  </form>
+
+  <div class="form-thanks hidden py-6 text-center" role="status" aria-live="polite" tabindex="-1">
+    <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-forest-100 text-forest-700"><Icon name="check" class="h-8 w-8" /></span>
+    <p class="mt-4 font-heading text-2xl font-extrabold text-forest-950">Thanks! We got your request.</p>
+    <p class="mt-2 text-ink">We'll reach out within <Field v={biz.responseTime} />. Need help sooner? Call <a href={telHref} class="link">{biz.phone.display}</a>.</p>
+    {formIsPlaceholder && <p class="mt-3 text-sm text-muted">(Concept preview: this form isn't connected yet, so nothing was sent.)</p>}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.quote-form').forEach((wrap) => {
+    const form = wrap.querySelector('form')!;
+    const thanks = wrap.querySelector<HTMLElement>('.form-thanks')!;
+    const error = wrap.querySelector<HTMLElement>('.form-error')!;
+    const next = form.querySelector<HTMLInputElement>('input[name="_next"]');
+    if (next) next.value = new URL(next.value, location.origin).href;
+
+    const done = () => {
+      form.classList.add('hidden');
+      thanks.classList.remove('hidden');
+      thanks.focus();
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      error.classList.add('hidden');
+      if (!form.reportValidity()) return;
+      if (wrap.dataset.placeholder === 'true') return done();
+      const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+        if (!res.ok) throw new Error(String(res.status));
+        done();
+      } catch {
+        error.textContent = "Sorry, that didn't go through. Please call us instead, or try again.";
+        error.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Get My Free Quote';
+      }
+    });
+  });
+</script>

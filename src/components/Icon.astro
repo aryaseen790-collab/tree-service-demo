@@ -1,0 +1,21 @@
+---
+// Small inline icon set (no icon font, no extra requests).
+interface Props { name: 'phone' | 'check' | 'clock' | 'shield' | 'pin' | 'arrow' | 'bolt' | 'star' | 'menu' | 'chevron' | 'leaf' | 'mail'; class?: string }
+const { name, class: cls = 'h-5 w-5' } = Astro.props;
+const paths: Record<string, string> = {
+  phone: 'M2.5 4.5c0-1.1.9-2 2-2h2.2c.5 0 .9.3 1 .8l1 4c.1.4-.1.9-.5 1.1l-1.6 1c1.1 2.4 3 4.4 5.5 5.5l1-1.6c.2-.4.7-.6 1.1-.5l4 1c.5.1.8.5.8 1v2.2c0 1.1-.9 2-2 2h-1C9.6 21 3 14.4 2.5 6.5v-2z',
+  check: 'M4 12.5l5 5L20 6.5',
+  clock: 'M12 7v5l3 2M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+  shield: 'M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3zM9 12l2 2 4-4',
+  pin: 'M12 21s-7-6.2-7-11.5A7 7 0 0119 9.5C19 14.8 12 21 12 21zM12 12a2.5 2.5 0 100-5 2.5 2.5 0 000 5z',
+  arrow: 'M5 12h14M13 6l6 6-6 6',
+  bolt: 'M13 2L4 14h7l-1 8 9-12h-7l1-8z',
+  star: 'M12 3l2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4l-5.5 2.9 1-6.2L3 9.7l6.2-.9z',
+  menu: 'M4 7h16M4 12h16M4 17h16',
+  chevron: 'M6 9l6 6 6-6',
+  leaf: 'M5 19c0-8 5-13 15-14-1 10-6 15-14 15M5 19l7-7',
+  mail: 'M3 6h18v12H3zM3 7l9 6 9-6',
+};
+const filled = name === 'phone' || name === 'bolt' || name === 'star';
+---
+<svg class={cls} viewBox="0 0 24 24" aria-hidden="true" fill={filled ? 'currentColor' : 'none'} stroke={filled ? 'none' : 'currentColor'} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d={paths[name]} /></svg>

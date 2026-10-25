@@ -1,0 +1,94 @@
+{
+  "DEMO_MODE": true,
+
+  "demo": {
+    "bannerText": "Concept preview prepared for {name}, not an official site.",
+    "yourName": "[CONFIRM: your name / agency]",
+    "yourEmail": "[CONFIRM: your-email@example.com]",
+    "formEndpoint": "https://formspree.io/f/YOUR_DEMO_FORM_ID"
+  },
+
+  "site": {
+    "url": "https://example.com",
+    "language": "en-US",
+    "locale": "en_US",
+    "defaultOgImage": "/images/og-default.jpg",
+    "themeColor": "#143826"
+  },
+
+  "name": "Tree Care Experts",
+  "legalName": "[CONFIRM: legal business name]",
+  "ownerName": "[CONFIRM: owner name]",
+  "tagline": "Safe, clean tree work for Central Texas homes",
+
+  "address": {
+    "street": "2540 Chaparral Rd",
+    "city": "Temple",
+    "state": "TX",
+    "stateFull": "Texas",
+    "zip": "[CONFIRM: ZIP code]",
+    "country": "US"
+  },
+  "geo": {
+    "latitude": null,
+    "longitude": null,
+    "note": "[CONFIRM: exact map coordinates from Google Business Profile]"
+  },
+
+  "phone": {
+    "display": "(254) 458-0622",
+    "e164": "+12544580622"
+  },
+  "email": "[CONFIRM: business email]",
+
+  "hours": {
+    "confirmed": false,
+    "display": "[CONFIRM: business hours]",
+    "schema": []
+  },
+  "responseTime": "[CONFIRM: X] hours",
+  "emergencyAvailability": "[CONFIRM: emergency hours, e.g. 24/7?]",
+
+  "serviceArea": ["Temple", "Belton", "Killeen", "Salado", "Harker Heights", "Troy"],
+  "county": "Bell County",
+  "region": "Central Texas",
+
+  "services": [
+    { "slug": "tree-removal", "name": "Tree Removal", "short": "Safe removal of dead, dying, leaning or unwanted trees, close to homes, fences and power lines.", "image": "service-removal" },
+    { "slug": "tree-trimming", "name": "Tree Trimming & Pruning", "short": "Healthier, safer trees with proper cuts, clearance from your roof and better shape.", "image": "service-trimming" },
+    { "slug": "stump-grinding", "name": "Stump Grinding", "short": "Grind stumps below ground so you can mow, plant or build over the spot.", "image": "service-stump" },
+    { "slug": "emergency-tree-service", "name": "Emergency & Storm Damage", "short": "Fast help when a storm drops a tree on your house, car, fence or driveway.", "image": "service-storm" },
+    { "slug": "land-clearing", "name": "Land & Lot Clearing", "short": "Clear brush, cedar and unwanted trees to open up a lot, fence line or build site.", "image": "service-clearing" },
+    { "slug": "oak-wilt", "name": "Oak Wilt Care", "short": "Spot, slow and help prevent oak wilt, the disease that kills Central Texas oaks.", "image": "service-oakwilt" }
+  ],
+
+  "rating": {
+    "value": 5.0,
+    "count": 108,
+    "source": "Google",
+    "verified": true
+  },
+
+  "trust": {
+    "freeEstimates": true,
+    "sameDayResponse": true,
+    "licensed": "[CONFIRM: licensed?]",
+    "insured": "[CONFIRM: insured? liability + workers' comp]",
+    "yearsInBusiness": "[CONFIRM: years in business]",
+    "certifications": "[CONFIRM: ISA Certified Arborist or other certifications]"
+  },
+
+  "links": {
+    "googleProfile": "https://www.google.com/maps/search/?api=1&query=Tree%20Care%20Experts%202540%20Chaparral%20Rd%20Temple%20TX",
+    "googleReview": "https://www.google.com/maps/search/?api=1&query=Tree%20Care%20Experts%202540%20Chaparral%20Rd%20Temple%20TX",
+    "googleReviewIsPlaceholder": true,
+    "facebook": "",
+    "sameAs": []
+  },
+
+  "form": {
+    "provider": "formspree",
+    "endpoint": "https://formspree.io/f/YOUR_LIVE_FORM_ID",
+    "allowPhotoUpload": true
+  }
+}

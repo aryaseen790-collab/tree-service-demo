@@ -1,0 +1,37 @@
+---
+// Click-to-load map: Google Maps sets cookies, so nothing loads from Google
+// until the visitor asks for it. Keeps the site cookie-free and fast.
+import { biz, fullAddress } from '../lib/site';
+import Icon from './Icon.astro';
+const q = encodeURIComponent(`${biz.name}, ${fullAddress}`);
+const embed = `https://www.google.com/maps?q=${q}&output=embed`;
+const directions = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+---
+<div class="overflow-hidden rounded-2xl ring-1 ring-forest-900/10">
+  <div class="map-slot relative flex aspect-[4/3] items-center justify-center bg-forest-100 sm:aspect-[16/10]" data-src={embed}>
+    <svg class="absolute inset-0 h-full w-full text-forest-200" aria-hidden="true"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="currentColor" stroke-width="2"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>
+    <div class="relative px-6 text-center">
+      <Icon name="pin" class="mx-auto h-10 w-10 text-accent-600" />
+      <p class="mt-2 font-bold text-forest-950">{fullAddress}</p>
+      <button type="button" class="map-load btn-primary mt-4">Show map</button>
+      <p class="mt-2 text-xs text-muted">Loads Google Maps, which may set cookies.</p>
+    </div>
+  </div>
+  <a href={directions} class="flex items-center justify-center gap-2 bg-white px-4 py-3 font-bold text-forest-800 no-underline hover:bg-forest-50" rel="noopener" target="_blank">Get directions <Icon name="arrow" class="h-4 w-4" /><span class="sr-only">(opens Google Maps in a new tab)</span></a>
+</div>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.map-load').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const slot = btn.closest<HTMLElement>('.map-slot');
+      if (!slot) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = slot.dataset.src!;
+      iframe.title = 'Map showing our location';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      iframe.className = 'absolute inset-0 h-full w-full border-0';
+      slot.replaceChildren(iframe);
+      iframe.focus();
+    });
+  });
+</script>

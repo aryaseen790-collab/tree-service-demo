@@ -1,0 +1,13 @@
+{
+  "_readme": "Each slot is one image on the site. To swap in a real photo: paste a direct download URL into sourceUrl (Unsplash: the photo page's Download link; Pexels: the original image URL), fill in photographer, sourcePage and license, then run `npm run images`. The script downloads, resizes and converts to WebP at every width listed and rewrites CREDITS.md. Leave sourceUrl empty to keep the generated illustration.",
+  "images": [
+    { "id": "hero", "width": 1600, "height": 900, "widths": [800, 1600], "alt": "Large shade tree beside a Central Texas home at golden hour", "search": "https://unsplash.com/s/photos/arborist", "sourceUrl": "", "sourcePage": "", "photographer": "", "license": "" },
+    { "id": "service-removal", "width": 1200, "height": 800, "widths": [600, 1200], "alt": "Freshly cut tree trunk sections stacked in a yard after a tree removal", "search": "https://unsplash.com/s/photos/tree-removal", "sourceUrl": "", "sourcePage": "", "photographer": "", "license": "" },
+    { "id": "service-trimming", "width": 1200, "height": 800, "widths": [600, 1200], "alt": "Ladder set against a full shade tree ready for trimming", "search": "https://unsplash.com/s/photos/tree-trimming", "sourceUrl": "", "sourcePage": "", "photographer": "", "license": "" },
+    { "id": "service-stump", "width": 1200, "height": 800, "widths": [600, 1200], "alt": "Close-up of a tree stump with growth rings surrounded by wood chips", "search": "https://unsplash.com/s/photos/tree-stump", "sourceUrl": "", "sourcePage": "", "photographer": "", "license": "" },
+    { "id": "service-storm", "width": 1200, "height": 800, "widths": [600, 1200], "alt": "Tree blown over onto a fence during a thunderstorm", "search": "https://www.pexels.com/search/fallen%20tree/", "sourceUrl": "", "sourcePage": "", "photographer": "", "license": "" },
+    { "id": "service-clearing", "width": 1200, "height": 800, "widths": [600, 1200], "alt": "Cleared lot with brush piles and a tree line in the background", "search": "https://unsplash.com/s/photos/land-clearing", "sourceUrl": "", "sourcePage": "", "photographer": "", "license": "" },
+    { "id": "service-oakwilt", "width": 1200, "height": 800, "widths": [600, 1200], "alt": "Live oak with patches of brown leaves, an early sign of oak wilt", "search": "https://unsplash.com/s/photos/live-oak", "sourceUrl": "", "sourcePage": "", "photographer": "", "license": "" },
+    { "id": "about-team", "width": 1200, "height": 800, "widths": [600, 1200], "alt": "Placeholder for a photo of the Tree Care Experts crew", "search": "Use a real photo of the owner and crew (not stock).", "sourceUrl": "", "sourcePage": "", "photographer": "", "license": "" }
+  ]
+}

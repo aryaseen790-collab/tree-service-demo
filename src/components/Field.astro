@@ -1,0 +1,9 @@
+---
+// Renders a business detail. "[CONFIRM ...]" placeholders are highlighted so
+// they are easy to spot during the pitch and impossible to miss before launch.
+import { isPlaceholder } from '../lib/site';
+interface Props { v: string | number | boolean | null | undefined }
+const { v } = Astro.props;
+const text = v === null || v === undefined ? '' : String(v);
+---
+{isPlaceholder(text) ? <span class="confirm">{text}</span> : <Fragment>{text}</Fragment>}

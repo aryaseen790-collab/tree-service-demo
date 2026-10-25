@@ -1,0 +1,80 @@
+---
+import '../styles/global.css';
+import { biz, DEMO_MODE, url, absUrl } from '../lib/site';
+import { localBusiness, breadcrumbSchema } from '../lib/schema';
+import DemoBanner from '../components/DemoBanner.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileCallBar from '../components/MobileCallBar.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  crumbs?: { name: string; href: string }[];
+  schema?: Record<string, unknown>[];
+  noindex?: boolean;
+  bodyClass?: string;
+}
+const { title, description, ogImage = biz.site.defaultOgImage, crumbs, schema = [], noindex = false, bodyClass = '' } = Astro.props;
+
+if (import.meta.env.DEV) {
+  if (title.length > 60) console.warn(`[seo] title over 60 chars (${title.length}): ${title}`);
+  if (description.length > 155) console.warn(`[seo] description over 155 chars (${description.length}): ${title}`);
+}
+
+const site = Astro.site;
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const canonical = new URL(path, site ?? biz.site.url).toString();
+const ogImageUrl = absUrl(ogImage, site);
+const robots = DEMO_MODE || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+
+const jsonLd = [localBusiness(site), ...(crumbs ? [breadcrumbSchema(site, crumbs)] : []), ...schema];
+---
+<!doctype html>
+<html lang={biz.site.language}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content={biz.site.themeColor} />
+
+    <link rel="icon" href={url('/favicon.ico')} sizes="32x32" />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
+    <link rel="manifest" href={url('/site.webmanifest')} />
+    <link rel="sitemap" href={url('/sitemap-index.xml')} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={biz.name} />
+    <meta property="og:locale" content={biz.site.locale} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;600;700&display=swap" />
+
+    {jsonLd.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body class={`flex min-h-screen flex-col pb-[4.75rem] md:pb-0 ${bodyClass}`}>
+    <DemoBanner />
+    <Header />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+    <MobileCallBar />
+  </body>
+</html>

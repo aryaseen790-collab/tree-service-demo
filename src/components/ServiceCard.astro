@@ -1,0 +1,17 @@
+---
+import { url } from '../lib/site';
+import Img from './Img.astro';
+import Icon from './Icon.astro';
+interface Props { slug: string; name: string; short: string; image: string; headingLevel?: 'h2' | 'h3' }
+const { slug, name, short, image, headingLevel: H = 'h3' } = Astro.props;
+---
+<li class="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-forest-900/10 transition hover:-translate-y-0.5 hover:shadow-lg">
+  <Img id={image} sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw" class="aspect-[3/2] w-full object-cover" />
+  <div class="flex flex-1 flex-col p-5">
+    <H class="text-xl font-extrabold">
+      <a href={url(`/${slug}/`)} class="no-underline after:absolute after:inset-0 after:content-[''] focus-visible:outline-none group-focus-within:underline">{name}</a>
+    </H>
+    <p class="mt-2 flex-1 text-muted">{short}</p>
+    <span class="mt-4 inline-flex items-center gap-1 font-bold text-forest-700" aria-hidden="true">Learn more <Icon name="arrow" class="h-4 w-4 transition group-hover:translate-x-1" /></span>
+  </div>
+</li>

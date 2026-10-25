@@ -1,0 +1,144 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Stars from '../components/Stars.astro';
+import TrustBar from '../components/TrustBar.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import ReviewsGrid from '../components/ReviewsGrid.astro';
+import AreaList from '../components/AreaList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { biz, services, telHref, url, cityState, costGuidePath } from '../lib/site';
+
+const title = `Tree Removal & Trimming in ${cityState} | ${biz.name}`;
+const description = `Tree removal, trimming, stump grinding and storm cleanup in ${cityState} and nearby. Rated ${biz.rating.value.toFixed(1)} on Google. Free estimates. Call ${biz.phone.display}.`;
+
+const why = [
+  { icon: 'star', title: `${biz.rating.value.toFixed(1)} stars from ${biz.rating.count} reviews`, text: `Neighbors across ${biz.county} have rated us on Google. Read what they say before you call.` },
+  { icon: 'clock', title: 'Same-day response', text: 'Call or send the form and we get back to you the same day. Storm damage goes to the front of the line.' },
+  { icon: 'check', title: 'Free, clear estimates', text: 'We come out, look at the tree, and give you a price in plain words. No pressure and no surprise add-ons.' },
+  { icon: 'leaf', title: 'Local to Central Texas', text: `We work on ${biz.address.street} in ${biz.address.city}, so we know local trees like live oaks, cedar elms and pecans, and the storms that test them.` },
+] as const;
+---
+<BaseLayout title={title} description={description}>
+  <!-- Hero -->
+  <section class="relative isolate overflow-hidden bg-forest-950">
+    <Img id="hero" alt="" sizes="100vw" loading="eager" fetchpriority="high" class="absolute inset-0 -z-10 h-full w-full object-cover" />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-forest-950/80 via-forest-950/70 to-forest-950/90 lg:bg-gradient-to-r lg:from-forest-950/95 lg:via-forest-950/75 lg:to-forest-950/30"></div>
+    <div class="container-x grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-[1.15fr_1fr] lg:py-24">
+      <div class="text-white">
+        <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-cream-100 ring-1 ring-white/20">
+          <Stars value={biz.rating.value} class="h-4 w-4" />
+          {biz.rating.value.toFixed(1)} on Google · {biz.rating.count} reviews
+        </p>
+        <h1 class="mt-5 text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">Tree Removal &amp; Trimming in {cityState}</h1>
+        <p class="mt-5 max-w-xl text-lg text-cream-100 sm:text-xl">
+          Safe, careful tree work from a local crew. Free estimates and same-day response in {biz.address.city}, Belton, Killeen and nearby towns.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href={telHref} class="btn-accent text-lg"><Icon name="phone" /> Call Now: {biz.phone.display}</a>
+          <a href="#quote" class="btn-ghost-light text-lg">Get a Free Quote</a>
+        </div>
+        <ul class="mt-8 grid gap-2 text-cream-100 sm:grid-cols-2">
+          <li class="flex items-center gap-2"><Icon name="check" class="h-5 w-5 text-accent-400" /> Free on-site estimates</li>
+          <li class="flex items-center gap-2"><Icon name="check" class="h-5 w-5 text-accent-400" /> Storm and emergency help</li>
+          <li class="flex items-center gap-2"><Icon name="check" class="h-5 w-5 text-accent-400" /> Removal, trimming &amp; stumps</li>
+          <li class="flex items-center gap-2"><Icon name="check" class="h-5 w-5 text-accent-400" /> Oak wilt know-how</li>
+        </ul>
+      </div>
+      <div id="quote">
+        <QuoteForm id="hero-quote" heading="Get a free quote" sub="Four quick fields. We'll call or text you back." />
+      </div>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <!-- Services -->
+  <section id="services" class="py-16 lg:py-24">
+    <div class="container-x">
+      <div class="max-w-2xl">
+        <p class="eyebrow">Our services</p>
+        <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Tree services for {biz.address.city} homes and land</h2>
+        <p class="mt-3 text-lg text-muted">From one tricky tree over the roof to a whole lot full of cedar, we handle the job start to finish and leave your yard clean.</p>
+      </div>
+      <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s) => <ServiceCard {...s} />)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Why us -->
+  <section class="bg-white py-16 lg:py-24">
+    <div class="container-x grid items-center gap-12 lg:grid-cols-2">
+      <div class="order-2 lg:order-1">
+        <p class="eyebrow">Why choose us</p>
+        <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Straight answers, careful work, a clean yard</h2>
+        <ul class="mt-8 space-y-6">
+          {why.map((w) => (
+            <li class="flex gap-4">
+              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-forest-100 text-forest-700"><Icon name={w.icon} class="h-6 w-6" /></span>
+              <div>
+                <h3 class="text-xl font-bold">{w.title}</h3>
+                <p class="mt-1 text-muted">{w.text}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href={telHref} class="btn-accent"><Icon name="phone" /> Call {biz.phone.display}</a>
+          <a href={url('/about/')} class="btn-outline">About our crew</a>
+        </div>
+      </div>
+      <div class="order-1 lg:order-2">
+        <Img id="service-trimming" sizes="(min-width: 1024px) 560px, 100vw" class="aspect-[3/2] w-full rounded-2xl object-cover shadow-lg" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="py-16 lg:py-24">
+    <div class="container-x">
+      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="eyebrow">Reviews</p>
+          <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Rated {biz.rating.value.toFixed(1)} by {biz.rating.count} Google reviewers</h2>
+          <p class="mt-3 flex items-center gap-2 text-lg text-muted"><Stars value={biz.rating.value} label={`${biz.rating.value} out of 5 stars`} /> Real reviews from real neighbors.</p>
+        </div>
+        <a href={url('/reviews/')} class="btn-outline shrink-0">Read all reviews</a>
+      </div>
+      <div class="mt-10"><ReviewsGrid limit={3} placeholders={3} /></div>
+    </div>
+  </section>
+
+  <!-- Mid CTA -->
+  <section class="bg-accent-500">
+    <div class="container-x flex flex-col items-start gap-4 py-8 sm:flex-row sm:items-center sm:justify-between">
+      <p class="font-heading text-2xl font-extrabold text-forest-950">Storm damage? Tree on the house? Call now.</p>
+      <a href={url('/emergency-tree-service/')} class="btn bg-forest-950 text-white hover:bg-forest-800"><Icon name="bolt" /> Emergency tree service</a>
+    </div>
+  </section>
+
+  <!-- Service area -->
+  <section class="py-16 lg:py-24">
+    <div class="container-x grid gap-10 lg:grid-cols-2">
+      <div>
+        <p class="eyebrow">Service area</p>
+        <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Serving {biz.address.city} and {biz.county}</h2>
+        <p class="mt-3 text-lg text-muted">
+          We're based in {biz.address.city} and work all over the area. Not sure if you're in range? Just call. If we can't help, we'll tell you who can.
+        </p>
+        <p class="mt-6">
+          <a href={url(costGuidePath)} class="link">What does tree removal cost in {biz.address.city}? Read our guide</a>
+        </p>
+      </div>
+      <div>
+        <AreaList />
+        <a href={url('/service-areas/')} class="mt-5 inline-flex items-center gap-1 font-bold text-forest-700">See all service areas <Icon name="arrow" class="h-4 w-4" /></a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

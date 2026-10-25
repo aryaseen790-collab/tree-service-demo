@@ -1,0 +1,11 @@
+---
+import { biz, telHref, url } from '../lib/site';
+import Icon from './Icon.astro';
+---
+<div class="fixed inset-x-0 bottom-0 z-40 border-t border-forest-900/20 bg-cream-50/95 p-2 shadow-[0_-4px_16px_rgba(0,0,0,0.12)] backdrop-blur md:hidden">
+  <div class="grid grid-cols-2 gap-2">
+    <a href={telHref} class="btn-accent w-full"><Icon name="phone" /> Call Now</a>
+    <a href={url('/contact/#quote')} class="btn-primary w-full">Free Quote</a>
+  </div>
+  <p class="sr-only">Call {biz.name} at {biz.phone.display}</p>
+</div>

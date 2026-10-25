@@ -1,0 +1,18 @@
+---
+import { url } from '../lib/site';
+import Icon from './Icon.astro';
+interface Props { crumbs: { name: string; href: string }[]; dark?: boolean }
+const { crumbs, dark = false } = Astro.props;
+---
+<nav aria-label="Breadcrumb" class="text-sm">
+  <ol class="flex flex-wrap items-center gap-1">
+    {crumbs.map((c, i) => (
+      <li class="flex items-center gap-1">
+        {i > 0 && <Icon name="chevron" class={`h-3.5 w-3.5 -rotate-90 ${dark ? 'text-cream-300' : 'text-muted'}`} />}
+        {i === crumbs.length - 1
+          ? <span aria-current="page" class={dark ? 'text-cream-200' : 'text-muted'}>{c.name}</span>
+          : <a href={url(c.href)} class={dark ? 'text-white underline underline-offset-4 hover:text-accent-300' : 'link font-medium'}>{c.name}</a>}
+      </li>
+    ))}
+  </ol>
+</nav>

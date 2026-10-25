@@ -1,0 +1,12 @@
+---
+interface Props { value?: number; class?: string; label?: string }
+const { value = 5, class: cls = 'h-5 w-5', label } = Astro.props;
+const full = Math.round(value);
+---
+<span class="inline-flex items-center gap-0.5 text-accent-500" role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}>
+  {Array.from({ length: 5 }, (_, i) => (
+    <svg class={cls} viewBox="0 0 20 20" fill={i < full ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+      <path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.5 7.7l5.9-.8z" />
+    </svg>
+  ))}
+</span>

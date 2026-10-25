@@ -1,0 +1,32 @@
+---
+// Responsive local image from src/data/images.json. Width/height are always set
+// so the browser reserves space and nothing shifts while loading.
+import manifest from '../data/images.json';
+import { url } from '../lib/site';
+
+interface Props {
+  id: string;
+  alt?: string;
+  sizes?: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+}
+const { id, alt, sizes = '100vw', class: cls = '', loading = 'lazy', fetchpriority = 'auto' } = Astro.props;
+const slot = manifest.images.find((i) => i.id === id);
+if (!slot) throw new Error(`Unknown image id "${id}" (add it to src/data/images.json)`);
+const largest = Math.max(...slot.widths);
+const srcset = slot.widths.map((w) => `${url(`/images/${id}-${w}.webp`)} ${w}w`).join(', ');
+---
+<img
+  src={url(`/images/${id}-${largest}.webp`)}
+  srcset={srcset}
+  sizes={sizes}
+  width={slot.width}
+  height={slot.height}
+  alt={alt ?? slot.alt}
+  loading={loading}
+  decoding="async"
+  fetchpriority={fetchpriority}
+  class={cls}
+/>

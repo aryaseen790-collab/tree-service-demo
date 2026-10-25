@@ -1,0 +1,35 @@
+---
+import reviewsData from '../data/reviews.json';
+import Stars from './Stars.astro';
+interface Props { limit?: number; placeholders?: number }
+const { limit = 6, placeholders = 3 } = Astro.props;
+type Review = { author: string; rating: number; date?: string; text: string; service?: string };
+const reviews = (reviewsData.reviews as Review[]).slice(0, limit);
+---
+{reviews.length > 0 ? (
+  <ul class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+    {reviews.map((r) => (
+      <li class="flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-forest-900/10">
+        <Stars value={r.rating} label={`${r.rating} out of 5 stars`} />
+        <blockquote class="mt-3 flex-1 text-ink">“{r.text}”</blockquote>
+        <p class="mt-4 font-bold text-forest-950">{r.author}<span class="font-normal text-muted">{r.service ? ` · ${r.service}` : ''}{r.date ? ` · ${r.date}` : ''}</span></p>
+        <p class="mt-1 text-sm text-muted">Google review</p>
+      </li>
+    ))}
+  </ul>
+) : (
+  <ul class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+    {Array.from({ length: placeholders }, (_, i) => (
+      <li class="flex flex-col rounded-2xl border-2 border-dashed border-forest-600/40 bg-white/70 p-6">
+        <p class="text-xs font-bold uppercase tracking-wider text-amber-800">Placeholder · real review goes here</p>
+        <div class="mt-4 space-y-2" aria-hidden="true">
+          <div class="h-3 w-full rounded bg-forest-100"></div>
+          <div class="h-3 w-11/12 rounded bg-forest-100"></div>
+          <div class="h-3 w-4/5 rounded bg-forest-100"></div>
+          <div class="h-3 w-2/3 rounded bg-forest-100"></div>
+        </div>
+        <p class="mt-5 text-sm text-muted"><span class="confirm">[CONFIRM: Google review #{i + 1}: paste exact text, first name, date]</span></p>
+      </li>
+    ))}
+  </ul>
+)}
