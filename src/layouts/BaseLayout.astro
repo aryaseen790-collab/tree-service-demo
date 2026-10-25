@@ -29,6 +29,8 @@ const canonical = new URL(path, site ?? biz.site.url).toString();
 const ogImageUrl = absUrl(ogImage, site);
 const robots = DEMO_MODE || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
 
+const fontsHref = 'https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;600;700&display=swap';
+
 const jsonLd = [localBusiness(site), ...(crumbs ? [breadcrumbSchema(site, crumbs)] : []), ...schema];
 ---
 <!doctype html>
@@ -64,7 +66,10 @@ const jsonLd = [localBusiness(site), ...(crumbs ? [breadcrumbSchema(site, crumbs
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;600;700&display=swap" />
+    <!-- Fonts load without blocking the first paint; font-display: swap shows system text until they arrive. -->
+    <link rel="preload" as="style" href={fontsHref} />
+    <link rel="stylesheet" href={fontsHref} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={fontsHref} /></noscript>
 
     {jsonLd.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>

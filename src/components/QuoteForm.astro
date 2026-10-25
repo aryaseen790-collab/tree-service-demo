@@ -123,7 +123,7 @@ const thanksUrl = url('/thank-you/');
     <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-forest-100 text-forest-700"><Icon name="check" class="h-8 w-8" /></span>
     <p class="mt-4 font-heading text-2xl font-extrabold text-forest-950">Thanks! We got your request.</p>
     <p class="mt-2 text-ink">We'll reach out within <Field v={biz.responseTime} />. Need help sooner? Call <a href={telHref} class="link">{biz.phone.display}</a>.</p>
-    {formIsPlaceholder && <p class="mt-3 text-sm text-muted">(Concept preview: this form isn't connected yet, so nothing was sent.)</p>}
+    {formIsPlaceholder && <p class="mt-3 text-sm text-muted">(This form isn't connected yet, so nothing was sent.)</p>}
   </div>
 </div>
 

@@ -16,7 +16,7 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'ignore',
-  build: { format: 'directory' },
+  build: { format: 'directory', inlineStylesheets: 'always' },
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/thank-you') && !page.endsWith('/404/'),

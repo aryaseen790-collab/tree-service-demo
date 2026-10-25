@@ -31,21 +31,21 @@ const crumbs = [{ name: 'Home', href: '/' }, { name: 'Contact & Free Quote', hre
         </div>
 
         <dl class="grid gap-4 rounded-2xl bg-white p-6 ring-1 ring-forest-900/10">
-          <div class="flex gap-3">
-            <Icon name="pin" class="mt-1 h-5 w-5 shrink-0 text-forest-600" />
-            <div><dt class="font-bold text-forest-950">Address</dt><dd>{fullAddress}</dd></div>
+          <div>
+            <dt class="flex items-center gap-2 font-bold text-forest-950"><Icon name="pin" class="h-5 w-5 shrink-0 text-forest-600" />Address</dt>
+            <dd class="pl-7">{fullAddress}</dd>
           </div>
-          <div class="flex gap-3">
-            <Icon name="clock" class="mt-1 h-5 w-5 shrink-0 text-forest-600" />
-            <div><dt class="font-bold text-forest-950">Hours</dt><dd><Field v={biz.hours.display} /></dd></div>
+          <div>
+            <dt class="flex items-center gap-2 font-bold text-forest-950"><Icon name="clock" class="h-5 w-5 shrink-0 text-forest-600" />Hours</dt>
+            <dd class="pl-7"><Field v={biz.hours.display} /></dd>
           </div>
-          <div class="flex gap-3">
-            <Icon name="mail" class="mt-1 h-5 w-5 shrink-0 text-forest-600" />
-            <div><dt class="font-bold text-forest-950">Email</dt><dd><Field v={biz.email} /></dd></div>
+          <div>
+            <dt class="flex items-center gap-2 font-bold text-forest-950"><Icon name="mail" class="h-5 w-5 shrink-0 text-forest-600" />Email</dt>
+            <dd class="pl-7"><Field v={biz.email} /></dd>
           </div>
-          <div class="flex gap-3">
-            <Icon name="check" class="mt-1 h-5 w-5 shrink-0 text-forest-600" />
-            <div><dt class="font-bold text-forest-950">Service area</dt><dd>{biz.serviceArea.join(', ')}</dd></div>
+          <div>
+            <dt class="flex items-center gap-2 font-bold text-forest-950"><Icon name="check" class="h-5 w-5 shrink-0 text-forest-600" />Service area</dt>
+            <dd class="pl-7">{biz.serviceArea.join(', ')}</dd>
           </div>
         </dl>
 
