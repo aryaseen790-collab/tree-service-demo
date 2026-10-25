@@ -132,9 +132,14 @@ check, and deploys on every push to `main` (or manually from the Actions tab).
 
 1. Merge this work into `main`.
 2. In the repo go to **Settings → Pages → Build and deployment** and set
-   **Source** to **GitHub Actions**.
+   **Source** to **GitHub Actions**. Ignore the suggested "Jekyll" and
+   "Static HTML" workflows; this repo already has its own.
 3. Push to `main` (or run the workflow manually). The site appears at
    `https://<user>.github.io/<repo>/`.
+
+If a deploy ran before Pages was turned on, it fails at the
+"configure-pages" step. Open that run in the **Actions** tab and click
+**Re-run all jobs**, or push any new commit to `main`.
 
 The workflow passes the correct base path (`/<repo>`) and URL to the build, so
 links work on a project site without any code changes.
