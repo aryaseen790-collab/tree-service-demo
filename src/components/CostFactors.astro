@@ -1,0 +1,29 @@
+---
+// Visual summary of what drives tree work pricing. Factors only, no invented prices.
+import Icon from './Icon.astro';
+const factors = [
+  { icon: 'ruler', title: 'Tree size', text: 'Height, trunk width and crown spread.' },
+  { icon: 'home', title: 'What it is near', text: 'Roofs, fences, pools and neighbors.' },
+  { icon: 'bolt', title: 'Power lines', text: 'Extra safety steps near lines.' },
+  { icon: 'truck', title: 'Access', text: 'Gates, slopes and room for equipment.' },
+  { icon: 'leaf', title: 'Tree health', text: 'Dead or rotten wood is slower to work.' },
+  { icon: 'recycle', title: 'Cleanup & wood', text: 'Haul away, mulch or leave firewood.' },
+  { icon: 'alert', title: 'Emergency', text: 'Storm damage on a home is complex.' },
+  { icon: 'saw', title: 'Stump grinding', text: 'Priced by stump width and count.' },
+] as const;
+---
+<figure class="my-12 rounded-3xl bg-night grain relative overflow-hidden p-6 text-white shadow-xl sm:p-8" data-animate>
+  <figcaption class="relative">
+    <p class="eyebrow-light">Infographic</p>
+    <p class="mt-2 font-heading text-2xl font-extrabold text-white sm:text-3xl">8 things that set the price</p>
+  </figcaption>
+  <ul class="relative mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+    {factors.map((f, i) => (
+      <li class="rounded-2xl bg-white/5 p-4 ring-1 ring-accent-500/20 transition hover:-translate-y-1 hover:bg-white/10 hover:ring-accent-400/60" data-pop style={`--d:${i * 90}ms`}>
+        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-500/15 text-accent-300"><Icon name={f.icon} class="h-6 w-6" /></span>
+        <p class="mt-3 font-heading font-bold text-white">{f.title}</p>
+        <p class="mt-1 text-sm text-cream-200">{f.text}</p>
+      </li>
+    ))}
+  </ul>
+</figure>

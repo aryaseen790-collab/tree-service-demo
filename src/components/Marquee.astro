@@ -1,0 +1,21 @@
+---
+// Endless ticker of services and towns. Pauses on hover; duplicate copy is hidden from screen readers.
+import { services, serviceArea } from '../lib/site';
+const items = [...services.map((s) => s.name), ...serviceArea.map((c) => `${c}, TX`)];
+---
+<div class="group relative overflow-hidden border-y border-accent-500/20 bg-ink-950 py-4" aria-label="Services and service area">
+  <div class="flex w-max animate-marquee gap-10 group-hover:[animation-play-state:paused]">
+    {[0, 1].map((copy) => (
+      <ul class="flex shrink-0 items-center gap-10" aria-hidden={copy === 1 ? 'true' : undefined}>
+        {items.map((t) => (
+          <li class="flex items-center gap-10 whitespace-nowrap font-heading text-lg font-bold uppercase tracking-wide text-cream-100 sm:text-xl">
+            {t}
+            <svg class="h-5 w-5 text-accent-400" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2c4 3 7 7 7 11a7 7 0 0 1-14 0c0-4 3-8 7-11z" /></svg>
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+  <div class="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-ink-950"></div>
+  <div class="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-ink-950"></div>
+</div>

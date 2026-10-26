@@ -1,84 +1,109 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Img from '../components/Img.astro';
 import Icon from '../components/Icon.astro';
 import Stars from '../components/Stars.astro';
-import TrustBar from '../components/TrustBar.astro';
+import StatsBand from '../components/StatsBand.astro';
+import Marquee from '../components/Marquee.astro';
 import ServiceCard from '../components/ServiceCard.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
 import QuoteForm from '../components/QuoteForm.astro';
 import ReviewsGrid from '../components/ReviewsGrid.astro';
-import AreaList from '../components/AreaList.astro';
+import ServiceMap from '../components/ServiceMap.astro';
 import CtaBand from '../components/CtaBand.astro';
+import Leaves from '../components/Leaves.astro';
 import { biz, services, telHref, url, cityState, costGuidePath } from '../lib/site';
 
 const title = `Tree Removal & Trimming in ${cityState} | ${biz.name}`;
 const description = `Tree removal, trimming, stump grinding and storm cleanup in ${cityState} and nearby. Rated ${biz.rating.value.toFixed(1)} on Google. Free estimates. Call ${biz.phone.display}.`;
 
+const headline = ['Tree', 'Removal', '&', 'Trimming', 'in'];
 const why = [
   { icon: 'star', title: `${biz.rating.value.toFixed(1)} stars from ${biz.rating.count} reviews`, text: `Neighbors across ${biz.county} have rated us on Google. Read what they say before you call.` },
   { icon: 'clock', title: 'Same-day response', text: 'Call or send the form and we get back to you the same day. Storm damage goes to the front of the line.' },
   { icon: 'check', title: 'Free, clear estimates', text: 'We come out, look at the tree, and give you a price in plain words. No pressure and no surprise add-ons.' },
-  { icon: 'leaf', title: 'Local to Central Texas', text: `We work on ${biz.address.street} in ${biz.address.city}, so we know local trees like live oaks, cedar elms and pecans, and the storms that test them.` },
+  { icon: 'leaf', title: 'Local to Central Texas', text: `We work on ${biz.address.street} in ${biz.address.city}, so we know live oaks, cedar elms and pecans, and the storms that test them.` },
 ] as const;
 ---
 <BaseLayout title={title} description={description}>
   <!-- Hero -->
-  <section class="relative isolate overflow-hidden bg-forest-950">
-    <Img id="hero" alt="" sizes="100vw" loading="eager" fetchpriority="high" class="absolute inset-0 -z-10 h-full w-full object-cover" />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-forest-950/80 via-forest-950/70 to-forest-950/90 lg:bg-gradient-to-r lg:from-forest-950/95 lg:via-forest-950/75 lg:to-forest-950/30"></div>
-    <div class="container-x grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-[1.15fr_1fr] lg:py-24">
-      <div class="text-white">
-        <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-cream-100 ring-1 ring-white/20">
+  <section class="bg-night grain relative isolate overflow-hidden text-white">
+    <Leaves count={14} />
+    <div class="container-x grid items-center gap-6 pb-28 pt-12 sm:pb-32 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:pb-40 lg:pt-20">
+      <div class="relative z-10">
+        <p class="inline-flex items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 text-sm font-semibold text-cream-100 ring-1 ring-accent-500/30 backdrop-blur" data-reveal>
           <Stars value={biz.rating.value} class="h-4 w-4" />
           {biz.rating.value.toFixed(1)} on Google · {biz.rating.count} reviews
         </p>
-        <h1 class="mt-5 text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">Tree Removal &amp; Trimming in {cityState}</h1>
-        <p class="mt-5 max-w-xl text-lg text-cream-100 sm:text-xl">
+        <h1 class="rise mt-6 text-[2.6rem] font-extrabold leading-[1.05] text-white sm:text-6xl lg:text-7xl">
+          {headline.map((w, i) => <><span style={`--d:${120 + i * 90}ms`}>{w}</span>{' '}</>)}
+          <span class="text-gold" style={`--d:${120 + headline.length * 90}ms`}>{cityState}</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-lg text-cream-200 sm:text-xl" data-reveal style="--d:650ms">
           Safe, careful tree work from a local crew. Free estimates and same-day response in {biz.address.city}, Belton, Killeen and nearby towns.
         </p>
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href={telHref} class="btn-accent text-lg"><Icon name="phone" /> Call Now: {biz.phone.display}</a>
-          <a href="#quote" class="btn-ghost-light text-lg">Get a Free Quote</a>
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row" data-reveal style="--d:780ms">
+          <a href={telHref} class="btn-accent px-7 text-lg"><Icon name="phone" /> Call Now: {biz.phone.display}</a>
+          <a href="#quote" class="btn-ghost-light px-7 text-lg">Get a Free Quote</a>
         </div>
-        <ul class="mt-8 grid gap-2 text-cream-100 sm:grid-cols-2">
-          <li class="flex items-center gap-2"><Icon name="check" class="h-5 w-5 text-accent-400" /> Free on-site estimates</li>
-          <li class="flex items-center gap-2"><Icon name="check" class="h-5 w-5 text-accent-400" /> Storm and emergency help</li>
-          <li class="flex items-center gap-2"><Icon name="check" class="h-5 w-5 text-accent-400" /> Removal, trimming &amp; stumps</li>
-          <li class="flex items-center gap-2"><Icon name="check" class="h-5 w-5 text-accent-400" /> Oak wilt know-how</li>
+        <ul class="mt-9 grid gap-2.5 text-cream-100 sm:grid-cols-2" data-reveal style="--d:900ms">
+          {['Free on-site estimates', 'Storm and emergency help', 'Removal, trimming & stumps', 'Oak wilt know-how'].map((t) => (
+            <li class="flex items-center gap-2"><span class="flex h-5 w-5 items-center justify-center rounded-full bg-accent-500 text-ink-950"><Icon name="check" class="h-3.5 w-3.5" /></span>{t}</li>
+          ))}
         </ul>
       </div>
-      <div id="quote">
-        <QuoteForm id="hero-quote" heading="Get a free quote" sub="Four quick fields. We'll call or text you back." />
+
+      <div class="relative -mt-4 flex items-end justify-center lg:mt-0" aria-hidden="true">
+        <div class="animate-glow absolute bottom-[12%] left-1/2 h-[70%] w-[90%] -translate-x-1/2 rounded-full bg-accent-500/25 blur-3xl"></div>
+        <img
+          src={url('/images/brand/logo-tree-800.webp')}
+          srcset={`${url('/images/brand/logo-tree-320.webp')} 320w, ${url('/images/brand/logo-tree-800.webp')} 800w`}
+          sizes="(min-width: 1024px) 540px, 90vw"
+          alt=""
+          width="800"
+          height="446"
+          fetchpriority="high"
+          class="animate-sway relative w-full max-w-xl origin-bottom drop-shadow-[0_20px_40px_rgba(212,167,44,0.35)]"
+        />
+        <div class="absolute -bottom-1 left-1/2 h-px w-[85%] -translate-x-1/2 bg-gradient-to-r from-transparent via-accent-400 to-transparent"></div>
       </div>
     </div>
   </section>
 
-  <TrustBar />
+  <StatsBand />
 
   <!-- Services -->
   <section id="services" class="py-16 lg:py-24">
     <div class="container-x">
-      <div class="max-w-2xl">
-        <p class="eyebrow">Our services</p>
-        <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Tree services for {biz.address.city} homes and land</h2>
-        <p class="mt-3 text-lg text-muted">From one tricky tree over the roof to a whole lot full of cedar, we handle the job start to finish and leave your yard clean.</p>
+      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div class="max-w-2xl" data-reveal>
+          <p class="eyebrow">Our services</p>
+          <h2 class="mt-3 text-3xl font-extrabold sm:text-5xl">Tree services for {biz.address.city} homes and land</h2>
+          <p class="mt-4 text-lg text-muted">From one tricky tree over the roof to a whole lot full of cedar, we handle the job start to finish and leave your yard clean.</p>
+        </div>
+        <a href="#quote" class="btn-outline shrink-0" data-reveal>Get a free quote</a>
       </div>
-      <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((s) => <ServiceCard {...s} />)}
+      <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s, i) => <ServiceCard {...s} index={i} />)}
       </ul>
     </div>
   </section>
 
-  <!-- Why us -->
+  <Marquee />
+
+  <ProcessSteps dark />
+
+  <!-- Why us + quote -->
   <section class="bg-white py-16 lg:py-24">
-    <div class="container-x grid items-center gap-12 lg:grid-cols-2">
-      <div class="order-2 lg:order-1">
-        <p class="eyebrow">Why choose us</p>
-        <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Straight answers, careful work, a clean yard</h2>
-        <ul class="mt-8 space-y-6">
-          {why.map((w) => (
-            <li class="flex gap-4">
-              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-forest-100 text-forest-700"><Icon name={w.icon} class="h-6 w-6" /></span>
+    <div class="container-x grid items-start gap-12 lg:grid-cols-[1fr_1.05fr]">
+      <div>
+        <div data-reveal>
+          <p class="eyebrow">Why choose us</p>
+          <h2 class="mt-3 text-3xl font-extrabold sm:text-5xl">Straight answers, careful work, a clean yard</h2>
+        </div>
+        <ul class="mt-10 space-y-4">
+          {why.map((w, i) => (
+            <li class="group flex gap-4 rounded-2xl p-4 transition hover:bg-cream-100" data-reveal="left" style={`--d:${i * 100}ms`}>
+              <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-ink-950 text-accent-300 shadow-md transition group-hover:rotate-6 group-hover:scale-105"><Icon name={w.icon} class="h-6 w-6" /></span>
               <div>
                 <h3 class="text-xl font-bold">{w.title}</h3>
                 <p class="mt-1 text-muted">{w.text}</p>
@@ -86,13 +111,9 @@ const why = [
             </li>
           ))}
         </ul>
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href={telHref} class="btn-accent"><Icon name="phone" /> Call {biz.phone.display}</a>
-          <a href={url('/about/')} class="btn-outline">About our crew</a>
-        </div>
       </div>
-      <div class="order-1 lg:order-2">
-        <Img id="service-trimming" sizes="(min-width: 1024px) 560px, 100vw" class="aspect-[3/2] w-full rounded-2xl object-cover shadow-lg" />
+      <div id="quote" class="lg:sticky lg:top-28" data-reveal="right">
+        <QuoteForm id="home-quote" heading="Get a free quote" sub="Four quick fields. We'll get back to you fast." />
       </div>
     </div>
   </section>
@@ -100,43 +121,42 @@ const why = [
   <!-- Reviews -->
   <section class="py-16 lg:py-24">
     <div class="container-x">
-      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between" data-reveal>
         <div>
           <p class="eyebrow">Reviews</p>
-          <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Rated {biz.rating.value.toFixed(1)} by {biz.rating.count} Google reviewers</h2>
+          <h2 class="mt-3 text-3xl font-extrabold sm:text-5xl">Rated {biz.rating.value.toFixed(1)} by {biz.rating.count} Google reviewers</h2>
           <p class="mt-3 flex items-center gap-2 text-lg text-muted"><Stars value={biz.rating.value} label={`${biz.rating.value} out of 5 stars`} /> Real reviews from real neighbors.</p>
         </div>
         <a href={url('/reviews/')} class="btn-outline shrink-0">Read all reviews</a>
       </div>
-      <div class="mt-10"><ReviewsGrid limit={3} placeholders={3} /></div>
+      <div class="mt-10" data-reveal style="--d:120ms"><ReviewsGrid limit={3} placeholders={3} /></div>
     </div>
   </section>
 
-  <!-- Mid CTA -->
-  <section class="bg-accent-500">
-    <div class="container-x flex flex-col items-start gap-4 py-8 sm:flex-row sm:items-center sm:justify-between">
-      <p class="font-heading text-2xl font-extrabold text-forest-950">Storm damage? Tree on the house? Call now.</p>
-      <a href={url('/emergency-tree-service/')} class="btn bg-forest-950 text-white hover:bg-forest-800"><Icon name="bolt" /> Emergency tree service</a>
+  <!-- Emergency strip -->
+  <section class="relative overflow-hidden bg-accent-500">
+    <div class="absolute inset-0 opacity-30" style="background-image:repeating-linear-gradient(-45deg,transparent 0 22px,rgba(10,15,12,.18) 22px 44px)" aria-hidden="true"></div>
+    <div class="container-x relative flex flex-col items-start gap-4 py-8 sm:flex-row sm:items-center sm:justify-between">
+      <p class="flex items-center gap-3 font-heading text-2xl font-extrabold text-ink-950"><Icon name="bolt" class="h-8 w-8 animate-float" /> Storm damage? Tree on the house? Call now.</p>
+      <a href={url('/emergency-tree-service/')} class="btn bg-ink-950 text-white hover:-translate-y-0.5 hover:bg-ink-800">Emergency tree service <Icon name="arrow" /></a>
     </div>
   </section>
 
   <!-- Service area -->
   <section class="py-16 lg:py-24">
-    <div class="container-x grid gap-10 lg:grid-cols-2">
-      <div>
+    <div class="container-x grid items-center gap-12 lg:grid-cols-[1fr_1.2fr]">
+      <div data-reveal>
         <p class="eyebrow">Service area</p>
-        <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Serving {biz.address.city} and {biz.county}</h2>
-        <p class="mt-3 text-lg text-muted">
+        <h2 class="mt-3 text-3xl font-extrabold sm:text-5xl">Serving {biz.address.city} and {biz.county}</h2>
+        <p class="mt-4 text-lg text-muted">
           We're based in {biz.address.city} and work all over the area. Not sure if you're in range? Just call. If we can't help, we'll tell you who can.
         </p>
-        <p class="mt-6">
-          <a href={url(costGuidePath)} class="link">What does tree removal cost in {biz.address.city}? Read our guide</a>
-        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href={url('/service-areas/')} class="btn-primary">See all service areas</a>
+          <a href={url(costGuidePath)} class="btn-outline">Tree removal cost guide</a>
+        </div>
       </div>
-      <div>
-        <AreaList />
-        <a href={url('/service-areas/')} class="mt-5 inline-flex items-center gap-1 font-bold text-forest-700">See all service areas <Icon name="arrow" class="h-4 w-4" /></a>
-      </div>
+      <div data-reveal="zoom"><ServiceMap /></div>
     </div>
   </section>
 

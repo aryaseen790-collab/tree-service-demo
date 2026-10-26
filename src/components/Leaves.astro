@@ -1,0 +1,22 @@
+---
+// Gold leaves drifting across a dark section. Purely decorative; hidden for reduced motion.
+interface Props { count?: number; class?: string }
+const { count = 12, class: cls = '' } = Astro.props;
+let seed = 7;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+const leaves = Array.from({ length: count }, () => ({
+  left: Math.round(rnd() * 100),
+  size: Math.round(10 + rnd() * 14),
+  dur: (11 + rnd() * 10).toFixed(1),
+  delay: (-rnd() * 20).toFixed(1),
+  drift: Math.round(-80 + rnd() * 160),
+}));
+---
+<div class={`pointer-events-none absolute inset-0 -z-10 overflow-hidden ${cls}`} aria-hidden="true">
+  {leaves.map((l) => (
+    <svg class="leaf" viewBox="0 0 24 24" style={`left:${l.left}%;--s:${l.size}px;--t:${l.dur}s;--d:${l.delay}s;--x:${l.drift}px`}>
+      <path fill="currentColor" d="M12 2c4 3 7 7 7 11a7 7 0 0 1-14 0c0-4 3-8 7-11zm0 4v15" />
+      <path d="M12 6v15M12 12l3-2M12 15l-3-2" stroke="rgba(10,15,12,.45)" stroke-width="1" fill="none" />
+    </svg>
+  ))}
+</div>

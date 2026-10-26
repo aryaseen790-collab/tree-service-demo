@@ -47,7 +47,8 @@ Other scripts:
 | `npm run audit` | Checks every built page: title < 60 chars, description < 155, one H1, canonical, no duplicate titles. |
 | `npm run check:links` | Checks every internal link, image and `#anchor` in `dist/`. Add `-- --external` to also request external links. |
 | `npm run images` | Downloads real photos listed in `src/data/images.json`, converts to WebP and rewrites `CREDITS.md`. |
-| `npm run images:placeholders` | Regenerates the illustrated placeholder images, OG image and favicons. |
+| `npm run images:placeholders` | Regenerates the illustrated placeholder images. |
+| `npm run brand` | Rebuilds the logo files, favicons and social share image from `brand/logo-source.webp`. |
 
 ## Editing `business.json`
 
@@ -85,9 +86,24 @@ Phone numbers in copy become tap-to-call links automatically.
 empty the site shows clearly labeled placeholder cards. Never write or edit
 review text.
 
+**Logo.** The owner's logo lives at `brand/logo-source.webp` (gold on black).
+`npm run brand` cuts it into a transparent tree mark (header, hero, page headers),
+the full logo (footer), favicons and the Open Graph image. If the owner has a
+higher-resolution or vector logo, replace the source file and rerun. The crop
+boxes at the top of `scripts/make-brand.mjs` are measured for the current file.
+
 **Brand colors and fonts.** Defined as Tailwind theme tokens at the top of
-`src/styles/global.css` (`forest-*`, `cream-*`, `accent-*`, `--font-heading`,
-`--font-sans`). The font `<link>` is in `src/layouts/BaseLayout.astro`.
+`src/styles/global.css`: `ink-*` (near-black), `accent-*` (logo gold),
+`forest-*`, `cream-*`, plus `--font-heading` and `--font-sans`. The font `<link>`
+is in `src/layouts/BaseLayout.astro`.
+
+**Motion and infographics.** Add `data-reveal` (or `data-reveal="left|right|zoom"`)
+to any element to fade it in on scroll; `style="--d:200ms"` staggers it. Numbers
+with `data-count` tick up. All of it is CSS plus one small observer in
+`src/components/Motion.astro`, and it switches off for visitors who prefer
+reduced motion. Infographic components: `StatsBand`, `Marquee`, `ProcessSteps`,
+`ServiceMap` (town positions in `src/data/geo.ts`), `OakWiltCalendar` and
+`CostFactors`. Stats only use real numbers from `business.json`.
 
 **Reusing for another client.** Edit `business.json`, rewrite the markdown in
 `src/content/services/` and `src/content/areas/` (city pages must be genuinely
@@ -187,7 +203,7 @@ and the sitemap use it.
   first paint.
 - CSS is inlined, images are WebP with `srcset`, `width` and `height` (no layout
   shift), and the only JavaScript is a few small inline scripts (menu, map,
-  form). The home page weighs about 170 KB.
+  form, scroll motion). Animations are CSS-only and respect reduced-motion settings.
 - Lighthouse (mobile) on the local build: Performance 100, Accessibility 100,
   Best Practices 100, SEO 100 with demo mode off. In demo mode SEO reports a
   lower score only because pages are intentionally `noindex`.

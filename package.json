@@ -15,7 +15,8 @@
     "images:placeholders": "node scripts/make-placeholders.mjs",
     "check:links": "node scripts/check-links.mjs",
     "audit": "node scripts/audit.mjs",
-    "test": "npm run build && node scripts/audit.mjs && node scripts/check-links.mjs"
+    "test": "npm run build && node scripts/audit.mjs && node scripts/check-links.mjs",
+    "brand": "node scripts/make-brand.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

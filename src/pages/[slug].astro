@@ -10,8 +10,12 @@ import ServiceCard from '../components/ServiceCard.astro';
 import AreaList from '../components/AreaList.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
-import Img from '../components/Img.astro';
 import Field from '../components/Field.astro';
+import OakWiltCalendar from '../components/OakWiltCalendar.astro';
+import CostFactors from '../components/CostFactors.astro';
+import ServiceMap from '../components/ServiceMap.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import Leaves from '../components/Leaves.astro';
 import { biz, fillTokens, services, serviceBySlug, areaSlug, costGuideSlug, telHref, url, cityState } from '../lib/site';
 import { serviceSchema, faqSchema } from '../lib/schema';
 
@@ -56,16 +60,17 @@ if (faqs.length) schema.push(faqSchema(faqs));
 ---
 <BaseLayout title={title} description={description} crumbs={crumbs} schema={schema}>
   {emergency ? (
-    <section class="bg-storm-900 text-white">
-      <div class="bg-alert-600 py-2 text-center text-sm font-bold uppercase tracking-wider">Storm damage · Fallen trees · Urgent help</div>
-      <div class="container-x py-10 sm:py-14">
+    <section class="bg-night grain relative isolate overflow-hidden text-white">
+      <div class="relative bg-alert-600 py-2 text-center text-sm font-bold uppercase tracking-wider"><span class="mr-2 inline-block h-2 w-2 animate-pulse rounded-full bg-white align-middle"></span>Storm damage · Fallen trees · Urgent help</div>
+      <Leaves count={10} />
+      <div class="container-x relative py-10 sm:py-14">
         <nav aria-label="Breadcrumb" class="text-sm text-cream-200"><a href={url('/')} class="text-white underline underline-offset-4">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">{service!.name}</span></nav>
         <h1 class="mt-4 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">{h1}</h1>
         <p class="mt-4 max-w-2xl text-lg text-cream-200 sm:text-xl">{intro}</p>
-        <a href={telHref} class="btn-accent mt-8 w-full max-w-xl py-5 text-2xl sm:text-3xl"><Icon name="phone" class="h-7 w-7" /> Call {biz.phone.display}</a>
+        <a href={telHref} class="btn-accent relative mt-8 w-full max-w-xl py-5 text-2xl sm:text-3xl"><span class="absolute inset-0 rounded-lg ring-4 ring-accent-400/60 animate-ping-slow" aria-hidden="true"></span><Icon name="phone" class="h-7 w-7" /> Call {biz.phone.display}</a>
         <p class="mt-3 text-cream-200">Tap to call. Emergency availability: <Field v={biz.emergencyAvailability} /></p>
         <p class="mt-6 rounded-xl bg-white/10 p-4 font-semibold text-white ring-1 ring-white/20">
-          <span class="text-accent-300">Danger first:</span> if a tree is touching a power line, stay at least 35 feet away and call 911 or your electric company before you call us.
+          <span class="font-extrabold text-red-300">Danger first:</span> if a tree is touching a power line, stay at least 35 feet away and call 911 or your electric company before you call us.
         </p>
       </div>
     </section>
@@ -79,8 +84,8 @@ if (faqs.length) schema.push(faqSchema(faqs));
         <h2 id="checklist-h" class="text-2xl font-extrabold sm:text-3xl">Storm damage checklist: what to do before we arrive</h2>
         <ol class="mt-6 grid gap-4 md:grid-cols-2">
           {(d.checklist as string[]).map((item, i) => (
-            <li class="flex gap-4 rounded-xl bg-white p-4 ring-1 ring-forest-900/10">
-              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-500 font-heading font-extrabold text-forest-950">{i + 1}</span>
+            <li class="flex gap-4 rounded-xl bg-white p-4 ring-1 ring-forest-900/10 transition hover:-translate-y-0.5 hover:shadow-md" data-reveal style={`--d:${(i % 2) * 100}ms`}>
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink-950 font-heading font-extrabold text-accent-300">{i + 1}</span>
               <span>{fillTokens(item)}</span>
             </li>
           ))}
@@ -95,17 +100,18 @@ if (faqs.length) schema.push(faqSchema(faqs));
         <Content />
       </div>
 
+      {(d.service === 'oak-wilt' || d.service === 'tree-trimming') && <OakWiltCalendar />}
+      {kind === 'guide' && <CostFactors />}
+
       {kind === 'area' && (
-        <section class="mt-12 grid gap-6 md:grid-cols-2" aria-label={`Trees in ${d.city}`}>
+        <section class="mt-12 grid gap-6" aria-label={`Trees in ${d.city}`} data-reveal>
           <div class="rounded-2xl bg-white p-6 ring-1 ring-forest-900/10">
             <h2 class="text-xl font-extrabold">Trees we often work on in {d.city}</h2>
-            <ul class="mt-4 space-y-2">
+            <ul class="mt-4 grid gap-x-6 gap-y-2 sm:grid-cols-2">
               {(d.trees as string[]).map((t) => <li class="flex gap-2"><Icon name="leaf" class="mt-1 h-5 w-5 shrink-0 text-forest-600" />{t}</li>)}
             </ul>
           </div>
-          <div class="overflow-hidden rounded-2xl">
-            <Img id={d.image} sizes="(min-width: 1024px) 360px, 100vw" class="h-full w-full object-cover" />
-          </div>
+          <ServiceMap highlight={d.city} />
         </section>
       )}
 
@@ -146,6 +152,8 @@ if (faqs.length) schema.push(faqSchema(faqs));
       </div>
     </aside>
   </div>
+
+  {kind === 'service' && !emergency && <ProcessSteps dark heading={`How ${service!.name.toLowerCase()} works with us`} />}
 
   <CtaBand heading={emergency ? 'Tree down? Call now.' : undefined} />
 </BaseLayout>

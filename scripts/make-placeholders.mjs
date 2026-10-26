@@ -2,7 +2,7 @@
 // These stand in until real photos are added with `npm run images`
 // (see src/data/images.json and CREDITS.md). Run: npm run images:placeholders
 import sharp from 'sharp';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 
 const OUT = new URL('../public/images/', import.meta.url);
@@ -192,11 +192,26 @@ const scenes = {
   },
 };
 
-async function render(name, W, H, file, { format = 'webp', quality = 72 } = {}) {
+// Gold duotone (gradient map) so the illustrations match the brushed-gold logo.
+const STOPS = [[0, [10, 15, 12]], [0.45, [60, 62, 30]], [0.75, [190, 145, 45]], [1, [250, 232, 170]]];
+function goldMap(v) {
+  v /= 255;
+  for (let i = 1; i < STOPS.length; i++) {
+    if (v <= STOPS[i][0]) {
+      const [a, ca] = STOPS[i - 1], [b, cb] = STOPS[i];
+      const t = (v - a) / (b - a);
+      return ca.map((c, j) => Math.round(c + (cb[j] - c) * t));
+    }
+  }
+  return STOPS.at(-1)[1];
+}
+
+async function render(name, W, H, file) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${scenes[name](W, H)}</svg>`;
-  let img = sharp(Buffer.from(svg));
-  img = format === 'jpg' ? img.jpeg({ quality: 80, mozjpeg: true }) : img.webp({ quality });
-  await img.toFile(new URL(file, OUT).pathname);
+  const { data, info } = await sharp(Buffer.from(svg)).grayscale().linear(1.15, -10).raw().toBuffer({ resolveWithObject: true });
+  const out = Buffer.alloc(info.width * info.height * 3);
+  for (let i = 0; i < info.width * info.height; i++) out.set(goldMap(data[i * info.channels]), i * 3);
+  await sharp(out, { raw: { width: info.width, height: info.height, channels: 3 } }).webp({ quality: 74 }).toFile(new URL(file, OUT).pathname);
 }
 
 for (const slot of manifest.images) {
@@ -207,40 +222,5 @@ for (const slot of manifest.images) {
   }
 }
 
-// Open Graph image (JPEG for widest social support) with name overlay.
-const biz = JSON.parse(readFileSync(new URL('../src/data/business.json', import.meta.url)));
-{
-  const W = 1200, H = 630;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${scenes.hero(W, H)}
-    <rect width="${W}" height="${H}" fill="${C.forest950}" opacity="0.55"/>
-    <text x="70" y="260" font-family="Arial, sans-serif" font-weight="800" font-size="78" fill="#ffffff">${biz.name}</text>
-    <text x="70" y="335" font-family="Arial, sans-serif" font-size="40" fill="#f3eee2">Tree removal, trimming &amp; stump grinding</text>
-    <text x="70" y="390" font-family="Arial, sans-serif" font-size="40" fill="#f3eee2">${biz.address.city}, ${biz.address.state} and nearby</text>
-    <rect x="70" y="440" width="380" height="76" rx="12" fill="${C.orange}"/>
-    <text x="260" y="490" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="36" fill="${C.forest950}">${biz.phone.display}</text>
-  </svg>`;
-  await sharp(Buffer.from(svg)).jpeg({ quality: 82, mozjpeg: true }).toFile(new URL('og-default.jpg', OUT).pathname);
-}
-
-// Favicon set.
-const iconSvg = (pad = 0) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect x="${pad}" y="${pad}" width="${64 - pad * 2}" height="${64 - pad * 2}" rx="${pad ? 0 : 14}" fill="${C.forest900}"/>
-  <path d="M30 50 h4 v-12 h-4z" fill="${C.wood}"/>
-  <circle cx="32" cy="26" r="13" fill="${C.leaf}"/><circle cx="23" cy="31" r="8" fill="${C.leaf}"/><circle cx="41" cy="31" r="8" fill="${C.leaf}"/>
-  <circle cx="35" cy="22" r="5" fill="${C.orange}"/>
-</svg>`;
-const PUB = new URL('../public/', import.meta.url);
-await writeFile(new URL('favicon.svg', PUB), iconSvg());
-await sharp(Buffer.from(iconSvg(0))).resize(180, 180).png().toFile(new URL('apple-touch-icon.png', PUB).pathname);
-await sharp(Buffer.from(iconSvg(0))).resize(192, 192).png().toFile(new URL('icon-192.png', PUB).pathname);
-await sharp(Buffer.from(iconSvg(0))).resize(512, 512).png().toFile(new URL('icon-512.png', PUB).pathname);
-// favicon.ico: a single 32x32 PNG wrapped in an ICO container.
-const png32 = await sharp(Buffer.from(iconSvg())).resize(32, 32).png().toBuffer();
-const header = Buffer.alloc(22);
-header.writeUInt16LE(0, 0); header.writeUInt16LE(1, 2); header.writeUInt16LE(1, 4);
-header.writeUInt8(32, 6); header.writeUInt8(32, 7); header.writeUInt8(0, 8); header.writeUInt8(0, 9);
-header.writeUInt16LE(1, 10); header.writeUInt16LE(32, 12);
-header.writeUInt32LE(png32.length, 14); header.writeUInt32LE(22, 18);
-await writeFile(new URL('favicon.ico', PUB), Buffer.concat([header, png32]));
-
-console.log('Placeholder images and icons generated in public/.');
+// The OG image and favicons come from the owner's logo: see scripts/make-brand.mjs.
+console.log('Placeholder images generated in public/images/.');

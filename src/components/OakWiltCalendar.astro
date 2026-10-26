@@ -1,0 +1,33 @@
+---
+// Oak pruning risk by month, per Texas A&M Forest Service guidance:
+// avoid pruning oaks Feb 1 - Jun 30; midsummer heat and mid-winter are the safest times.
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const level = (i: number) => (i >= 1 && i <= 5 ? 'high' : i === 6 || i === 7 || i === 11 || i === 0 ? 'low' : 'medium');
+const style = {
+  high: { h: 100, color: '#b91c1c', label: 'High risk' },
+  medium: { h: 55, color: '#d4a72c', label: 'Lower risk' },
+  low: { h: 30, color: '#2d7350', label: 'Safest' },
+} as const;
+---
+<figure class="my-12 overflow-hidden rounded-3xl bg-white p-6 shadow-lg ring-1 ring-forest-900/10 sm:p-8" data-animate>
+  <figcaption>
+    <p class="eyebrow">Infographic</p>
+    <p class="mt-2 font-heading text-2xl font-extrabold text-forest-950">When is it safe to prune oaks?</p>
+    <p class="mt-1 text-muted">Oak wilt beetles are most active in spring. Paint every fresh oak cut, any month.</p>
+  </figcaption>
+  <div class="mt-8 grid h-48 grid-cols-12 items-end gap-1.5 sm:gap-3" role="img" aria-label="Avoid pruning oaks from February through June. Midsummer and mid-winter are the safest months.">
+    {months.map((m, i) => {
+      const s = style[level(i)];
+      return (
+        <div class="flex h-full flex-col items-center justify-end gap-2">
+          <div class="w-full origin-bottom rounded-t-lg transition-transform duration-1000" style={`height:${s.h}%;background:${s.color};--d:${i * 70}ms`} data-grow-y></div>
+          <span class="text-[0.7rem] font-bold uppercase text-muted sm:text-xs">{m}</span>
+        </div>
+      );
+    })}
+  </div>
+  <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
+    {Object.values(style).map((s) => <li class="flex items-center gap-2"><span class="h-3 w-3 rounded-full" style={`background:${s.color}`}></span>{s.label}</li>)}
+  </ul>
+  <p class="mt-4 text-xs text-muted">Source: Texas A&amp;M Forest Service oak wilt guidance (texasoakwilt.org). Avoid pruning oaks Feb 1 to Jun 30.</p>
+</figure>

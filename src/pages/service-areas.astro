@@ -5,6 +5,7 @@ import PageHeader from '../components/PageHeader.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
 import MapEmbed from '../components/MapEmbed.astro';
+import ServiceMap from '../components/ServiceMap.astro';
 import { biz, serviceArea, areaSlug, url, cityState, fillTokens, telHref } from '../lib/site';
 
 const areas = await getCollection('areas');
@@ -24,11 +25,19 @@ const crumbs = [{ name: 'Home', href: '/' }, { name: 'Service Areas', href: '/se
   />
   <section class="py-14 lg:py-20">
     <div class="container-x">
+      <div class="mb-14 grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div data-reveal>
+          <p class="eyebrow">Where we work</p>
+          <h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Six towns, one local crew</h2>
+          <p class="mt-4 text-lg text-muted">Based in {biz.address.city} and working up and down I-35 and out toward the lakes. Tap a town on the map to see local tree info.</p>
+        </div>
+        <div data-reveal="zoom"><ServiceMap /></div>
+      </div>
       <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {serviceArea.map((city) => {
+        {serviceArea.map((city, i) => {
           const a = byCity.get(city);
           return (
-            <li class="group relative flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-forest-900/10 transition focus-within:ring-4 focus-within:ring-accent-500 hover:-translate-y-0.5 hover:shadow-lg">
+            <li class="group relative flex flex-col rounded-3xl bg-white p-6 shadow-sm ring-1 ring-forest-900/10 transition duration-300 focus-within:ring-4 focus-within:ring-accent-500 hover:-translate-y-1.5 hover:shadow-xl hover:ring-accent-500/60" data-reveal style={`--d:${(i % 3) * 100}ms`}>
               <Icon name="pin" class="h-8 w-8 text-accent-600" />
               <h2 class="mt-3 text-2xl font-extrabold">
                 <a href={url(`/${areaSlug(city)}/`)} class="no-underline after:absolute after:inset-0 after:content-[''] focus-visible:outline-none">Tree Service in {city}</a>

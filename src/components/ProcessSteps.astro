@@ -1,0 +1,41 @@
+---
+// "How it works" timeline infographic. The connecting line draws itself on scroll.
+import Icon from './Icon.astro';
+interface Props { heading?: string; dark?: boolean }
+const { heading = 'How it works, start to finish', dark = false } = Astro.props;
+const steps = [
+  { icon: 'phone', title: 'Call or send photos', text: 'Tell us what is going on. A photo from your phone helps.' },
+  { icon: 'clipboard', title: 'Free written estimate', text: 'We look at the tree and give you a clear price. No pressure.' },
+  { icon: 'saw', title: 'Safe, careful work', text: 'We protect your home and yard and plan every cut.' },
+  { icon: 'broom', title: 'Full cleanup', text: 'Branches chipped, wood hauled, yard raked. Done right.' },
+] as const;
+---
+<section class:list={['relative overflow-hidden py-16 lg:py-24', dark ? 'bg-night text-white' : '']} aria-labelledby="process-h">
+  <div class="container-x">
+    <div class="max-w-2xl" data-reveal>
+      <p class={dark ? 'eyebrow-light' : 'eyebrow'}>Our process</p>
+      <h2 id="process-h" class:list={['mt-2 text-3xl font-extrabold sm:text-4xl', dark && 'text-white']}>{heading}</h2>
+    </div>
+    <div class="relative mt-12" data-animate>
+      <svg class="absolute left-[12.5%] right-[12.5%] top-8 hidden h-2 w-[75%] lg:block" viewBox="0 0 1000 8" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="0" y1="4" x2="1000" y2="4" stroke="url(#pg)" stroke-width="3" stroke-dasharray="1000" data-draw style="--len:1000" />
+        <defs><linearGradient id="pg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1000" y2="0"><stop offset="0" stop-color="#8a6410" /><stop offset=".5" stop-color="#f0d68a" /><stop offset="1" stop-color="#d4a72c" /></linearGradient></defs>
+      </svg>
+      <ol class="relative grid gap-10 lg:grid-cols-4 lg:gap-6">
+        {steps.map((s, i) => (
+          <li class="relative flex gap-5 lg:flex-col lg:items-center lg:text-center" data-pop style={`--d:${300 + i * 250}ms`}>
+            {i < steps.length - 1 && <span class="absolute left-8 top-16 h-[calc(100%-1rem)] w-0.5 bg-gradient-to-b from-accent-500 to-accent-500/0 lg:hidden" aria-hidden="true"></span>}
+            <span class="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-ink-950 text-accent-300 shadow-lg ring-2 ring-accent-500/60">
+              <Icon name={s.icon} class="h-7 w-7" />
+              <span class="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-accent-500 font-heading text-sm font-extrabold text-ink-950">{i + 1}</span>
+            </span>
+            <div>
+              <h3 class:list={['text-xl font-bold lg:mt-5', dark && 'text-white']}>{s.title}</h3>
+              <p class:list={['mt-1', dark ? 'text-cream-200' : 'text-muted']}>{s.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>

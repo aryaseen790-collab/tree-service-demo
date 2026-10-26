@@ -1,0 +1,44 @@
+---
+// One small observer drives all scroll motion: [data-reveal] blocks, infographic
+// draws/grows/pops, and [data-count] number tickers. No animation library.
+---
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const targets = document.querySelectorAll<HTMLElement>('[data-reveal], [data-animate]');
+  const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+
+  const count = (el: HTMLElement) => {
+    const end = parseFloat(el.dataset.count!);
+    const decimals = Number(el.dataset.decimals || 0);
+    if (reduce) return;
+    const start = performance.now();
+    const dur = 1400;
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (end * eased).toFixed(decimals);
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  if (!('IntersectionObserver' in window)) {
+    targets.forEach((el) => el.classList.add('is-visible'));
+  } else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          const el = e.target as HTMLElement;
+          el.classList.add('is-visible');
+          el.querySelectorAll<HTMLElement>('[data-count]').forEach(count);
+          if (el.dataset.count) count(el);
+          io.unobserve(el);
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
+    );
+    targets.forEach((el) => io.observe(el));
+    counters.forEach((el) => { if (!el.closest('[data-reveal], [data-animate]')) io.observe(el); });
+  }
+</script>

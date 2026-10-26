@@ -2,16 +2,23 @@
 import { url } from '../lib/site';
 import Img from './Img.astro';
 import Icon from './Icon.astro';
-interface Props { slug: string; name: string; short: string; image: string; headingLevel?: 'h2' | 'h3' }
-const { slug, name, short, image, headingLevel: H = 'h3' } = Astro.props;
+interface Props { slug: string; name: string; short: string; image: string; headingLevel?: 'h2' | 'h3'; index?: number }
+const { slug, name, short, image, headingLevel: H = 'h3', index } = Astro.props;
 ---
-<li class="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-forest-900/10 transition focus-within:ring-4 focus-within:ring-accent-500 hover:-translate-y-0.5 hover:shadow-lg">
-  <Img id={image} sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw" class="aspect-[3/2] w-full object-cover" />
-  <div class="flex flex-1 flex-col p-5">
+<li class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-forest-900/10 transition duration-300 focus-within:ring-4 focus-within:ring-accent-500 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-20px_rgba(10,15,12,0.45)] hover:ring-accent-500/60" data-reveal style={index !== undefined ? `--d:${(index % 3) * 110}ms` : undefined}>
+  <div class="relative overflow-hidden">
+    <Img id={image} sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw" class="aspect-[3/2] w-full object-cover transition duration-700 group-hover:scale-110" />
+    <div class="absolute inset-0 bg-gradient-to-t from-ink-950/70 via-ink-950/10 to-transparent opacity-80 transition group-hover:opacity-100"></div>
+    {index !== undefined && <span class="absolute left-4 top-4 rounded-xl bg-ink-950/80 px-2.5 py-1 font-heading text-2xl font-extrabold backdrop-blur" aria-hidden="true"><span class="text-gold">{String(index + 1).padStart(2, "0")}</span></span>}
+  </div>
+  <div class="flex flex-1 flex-col p-6">
     <H class="text-xl font-extrabold">
-      <a href={url(`/${slug}/`)} class="no-underline after:absolute after:inset-0 after:content-[''] focus-visible:outline-none group-focus-within:underline">{name}</a>
+      <a href={url(`/${slug}/`)} class="no-underline after:absolute after:inset-0 after:content-[''] focus-visible:outline-none">{name}</a>
     </H>
     <p class="mt-2 flex-1 text-muted">{short}</p>
-    <span class="mt-4 inline-flex items-center gap-1 font-bold text-forest-700" aria-hidden="true">Learn more <Icon name="arrow" class="h-4 w-4 transition group-hover:translate-x-1" /></span>
+    <span class="mt-5 inline-flex items-center gap-2 font-bold text-accent-600" aria-hidden="true">
+      Learn more
+      <span class="flex h-8 w-8 items-center justify-center rounded-full bg-accent-500/15 transition group-hover:translate-x-1 group-hover:bg-accent-500 group-hover:text-ink-950"><Icon name="arrow" class="h-4 w-4" /></span>
+    </span>
   </div>
 </li>

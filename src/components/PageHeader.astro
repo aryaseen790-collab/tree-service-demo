@@ -1,27 +1,28 @@
 ---
-// Hero for inner pages: breadcrumbs, the page's single H1, intro and two CTAs.
+// Hero for inner pages: breadcrumbs, the page's single H1, intro and two CTAs,
+// on the dark brand background with the logo tree swaying in the corner.
 import { biz, telHref, url } from '../lib/site';
 import Breadcrumbs from './Breadcrumbs.astro';
-import Img from './Img.astro';
 import Icon from './Icon.astro';
 import Stars from './Stars.astro';
+import Leaves from './Leaves.astro';
 interface Props { h1: string; intro?: string; crumbs: { name: string; href: string }[]; image?: string; ctas?: boolean }
-const { h1, intro, crumbs, image, ctas = true } = Astro.props;
+const { h1, intro, crumbs, ctas = true } = Astro.props;
 ---
-<section class="relative isolate overflow-hidden bg-forest-950 text-white">
-  {image && <Img id={image} alt="" sizes="100vw" loading="eager" fetchpriority="high" class="absolute inset-0 -z-10 h-full w-full object-cover opacity-30" />}
-  <div class="absolute inset-0 -z-10 bg-gradient-to-r from-forest-950 via-forest-950/85 to-forest-950/40"></div>
-  <div class="container-x py-10 sm:py-14 lg:py-20">
-    <Breadcrumbs crumbs={crumbs} dark />
-    <h1 class="mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">{h1}</h1>
-    {intro && <p class="mt-4 max-w-2xl text-lg text-cream-200 sm:text-xl">{intro}</p>}
+<section class="bg-night grain relative isolate overflow-hidden text-white">
+  <Leaves count={8} />
+  <img src={url('/images/brand/logo-tree-800.webp')} alt="" width="800" height="446" class="animate-sway pointer-events-none absolute -bottom-6 -right-24 -z-10 w-[34rem] max-w-none origin-bottom opacity-20 sm:opacity-30 lg:-right-10 lg:w-[44rem] lg:opacity-40" />
+  <div class="container-x relative py-12 sm:py-16 lg:py-24">
+    <div data-reveal><Breadcrumbs crumbs={crumbs} dark /></div>
+    <h1 class="mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl" data-reveal style="--d:80ms">{h1}</h1>
+    {intro && <p class="mt-5 max-w-2xl text-lg text-cream-200 sm:text-xl" data-reveal style="--d:160ms">{intro}</p>}
     {ctas && (
-      <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row" data-reveal style="--d:240ms">
         <a href={telHref} class="btn-accent text-lg"><Icon name="phone" /> Call {biz.phone.display}</a>
         <a href={url('/contact/#quote')} class="btn-ghost-light text-lg">Get a Free Quote</a>
       </div>
     )}
-    <p class="mt-6 flex items-center gap-2 text-sm text-cream-200">
+    <p class="mt-7 flex items-center gap-2 text-sm text-cream-200" data-reveal style="--d:320ms">
       <Stars value={biz.rating.value} class="h-4 w-4" />
       <span>{biz.rating.value.toFixed(1)} on Google from {biz.rating.count} reviews · Free estimates</span>
     </p>

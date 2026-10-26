@@ -1,0 +1,30 @@
+---
+// Animated numbers. Only real figures from business.json; no invented stats.
+import { biz } from '../lib/site';
+import Icon from './Icon.astro';
+import Stars from './Stars.astro';
+const stats = [
+  { value: biz.rating.value, decimals: 1, label: 'Google rating', stars: true },
+  { value: biz.rating.count, decimals: 0, label: 'Google reviews' },
+  { value: biz.serviceArea.length, decimals: 0, label: 'Towns we serve' },
+  { value: biz.services.length, decimals: 0, label: 'Tree services' },
+];
+---
+<section aria-label="At a glance" class="relative z-10 -mt-12 sm:-mt-16">
+  <div class="container-x">
+    <div class="grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-accent-500/25 shadow-2xl ring-1 ring-accent-500/30 lg:grid-cols-5" data-reveal>
+      {stats.map((s, i) => (
+        <div class="bg-ink-900 px-5 py-6 text-center sm:py-8">
+          <p class="font-heading text-4xl font-extrabold sm:text-5xl"><span class="text-gold" data-count={s.value} data-decimals={s.decimals}>{s.value.toFixed(s.decimals)}</span></p>
+          {s.stars && <div class="mt-1 flex justify-center"><Stars value={biz.rating.value} class="h-4 w-4" /></div>}
+          <p class="mt-1 text-sm font-semibold uppercase tracking-wider text-cream-200">{s.label}</p>
+        </div>
+      ))}
+      <div class="col-span-2 flex flex-col items-center justify-center gap-2 bg-ink-900 px-5 py-6 text-center lg:col-span-1">
+        <span class="flex h-12 w-12 items-center justify-center rounded-full bg-accent-500/15 text-accent-300"><Icon name="clock" class="h-6 w-6" /></span>
+        <p class="font-heading text-xl font-extrabold text-white">Same-day response</p>
+        <p class="text-sm text-cream-200">Free estimates</p>
+      </div>
+    </div>
+  </div>
+</section>
