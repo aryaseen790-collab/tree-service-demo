@@ -76,7 +76,8 @@
     @apply bg-cream-100 font-sans text-ink antialiased;
     font-size: 1.0625rem;
     line-height: 1.65;
-    /* Slide-in animations start off-screen; clip (unlike hidden) keeps sticky elements working. */
+    /* Never allow sideways panning. "hidden" is the fallback for browsers without "clip". */
+    overflow-x: hidden;
     overflow-x: clip;
   }
   h1, h2, h3, h4 {
@@ -187,8 +188,11 @@
   transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
   transition-delay: var(--d, 0ms);
 }
-.js [data-reveal='left'] { transform: translateX(-36px); }
-.js [data-reveal='right'] { transform: translateX(36px); }
+/* Sideways slides only on wide screens; on phones they would push past the screen edge. */
+@media (min-width: 1024px) {
+  .js [data-reveal='left'] { transform: translateX(-36px); }
+  .js [data-reveal='right'] { transform: translateX(36px); }
+}
 .js [data-reveal='zoom'] { transform: scale(0.94); }
 .js [data-reveal].is-visible { opacity: 1; transform: none; }
 
